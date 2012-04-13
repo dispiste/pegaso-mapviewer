@@ -22,7 +22,8 @@ Ext.onReady(function() {
 
     var options, layer;
     var extent = new OpenLayers.Bounds(-5, 35, 15, 55);
-
+    var test = new OpenLayers.Bounds(3,2,2,2);
+    
     if (google) {
 
         options = {
@@ -75,7 +76,7 @@ Ext.onReady(function() {
             split: true
         }]
     });
-    
+
     var tabs = new Ext.TabPanel({
         renderTo: 'westTabPanel',
         width: 200,
