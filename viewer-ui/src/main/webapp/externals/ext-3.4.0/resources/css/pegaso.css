@@ -1672,3 +1672,15 @@ body.x-body-masked .x-window-plain .x-window-mc {
 .x-window-dlg .ext-mb-error {
     background-image:url(../images/pegaso/window/icon-error.gif);
 }
+
+.p-collapse-button {
+    background-image:url(../images/pegaso/layout/collapse.gif);
+    color:#3764a0;
+    font:bold 11px tahoma, arial, helvetica, sans-serif;
+}
+
+.p-expand-button {
+    background-image:url(../images/pegaso/layout/expand.gif);
+    color:#3764a0;
+    font:bold 11px tahoma, arial, helvetica, sans-serif;
+}

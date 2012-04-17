@@ -46,21 +46,66 @@ Ext.onReady(function() {
 
     } else {
         layer = new OpenLayers.Layer.WMS(
-            "Global Imagery",
-            "http://maps.opengeo.org/geowebcache/service/wms",
-            {layers: "bluemarble"},
-            {isBaseLayer: true}
-        );
+                "Global Imagery",
+                "http://pegasosdi.uab.es/ogc/wms?",
+                {layers: "NASA_BLUEMARBLE"},
+                {isBaseLayer: true}
+            );
     }
 
     var map = new OpenLayers.Map(options);
-
+    var cardNav = function(compId){
+    	var l = Ext.getCmp('west-tab-panel').getLayout();
+    	l.setActiveItem(compId);
+    };
+    var extendMap = function(){
+    	Ext.getCmp('west-tab-panel').collapse();
+    };
+    var tabPanel = {
+    		id: "west-tab-panel",
+    	    layout:'card',
+    	    activeItem: 0,
+    	    width: 200,
+    	    region: 'west',
+    	    bodyStyle: 'padding:15px',
+    	    split: true,
+    	    collipsible: true,
+    	    collapseMode: 'mini',
+    	    defaults: {border:false, plain:true},
+    	    tbar: [{
+    	        id: 'layersBtn',
+    	        enableToggle: true,
+    	        pressed: true,
+    	        toggleGroup:'btns',
+    	        text: 'Layers',
+    	        handler: cardNav.createDelegate(this, ['layersTab'])
+    	    },{
+    	        id: 'legendBtn',
+    	        text: 'Legend',
+    	        enableToggle: true,
+    	        toggleGroup:'btns',
+    	        handler: cardNav.createDelegate(this, ['legendTab'])
+    	    }, '->',{
+    	        id: 'collapse',
+    	        iconCls: 'p-collapse-button',
+    	        handler: extendMap.createDelegate(this, [])
+    	    }],
+    	    items: [{
+    	        id: "layersTab",
+    	        html: "<p>Hi. I'm the layer tree panel.</p>"
+    	    },{
+    	        id: 'legendTab',
+    	        html: "<p>Hi. I'm the legend panel.</p>"
+    	    }]
+    	};
+    
     new Ext.Viewport({
         layout: "border",
+        defaults: {border: false},
         items: [{
             region: "north",
             contentEl: "northDiv",
-            height: 100
+            height: 80
         }, {
             region: "center",
             id: "mappanel",
@@ -69,25 +114,8 @@ Ext.onReady(function() {
             layers: [layer],
             extent: extent,
             split: true
-        }, {
-            region: "west",
-            contentEl: "westDiv",
-            width: 200,
-            split: true
-        }]
-    });
-
-    var tabs = new Ext.TabPanel({
-        renderTo: 'westTabPanel',
-        width: 200,
-        activeTab: 0,
-        frame:true,
-        defaults:{autoHeight: true},
-        items:[
-            {contentEl:'layerTreeTab', title: 'Layers'},
-            {contentEl:'legendTab', title: 'Legend'}
+        }, tabPanel
         ]
     });
-
     mapPanel = Ext.getCmp("mappanel");
 });
