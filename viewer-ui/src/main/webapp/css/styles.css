@@ -1,0 +1,30 @@
+@CHARSET "ISO-8859-1";
+
+img.mainPegasoLogo {
+	position: relative;
+	left: 5px;
+	top: 10px
+}
+
+div.mainPegasoLogo {
+	position: absolute;
+	left: 0px;
+	top: 0 px;
+	width: 100%;
+	height: 70px;
+	border-bottom: #000080 dashed 1px; 
+}
+
+#pegasoBanner {
+	margin-left: 220px
+}
+.icono3{
+  background-image:url(../img/folder.png) !important; 
+  height:10 px ;
+  width: 10 px 	;
+} 
+.icono5{
+  background-image:url(../img/map-icon.png) !important; 
+  height:10 px ;
+  width: 10 px 	;
+} 
