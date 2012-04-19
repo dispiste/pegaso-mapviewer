@@ -166,25 +166,13 @@ Ext.onReady(function() {
         root: {
 		    children: Ext.decode(treeConfig)
 	    },
-        listeners: {
-            "radiochange": function(node){
-                alert(node.layer.name + " is now the the active layer.");
-            }
-        },
 		listeners: {
 			 'click': function(node, event){
 					console.log(node);
 			}
 		}, 
 		rootVisible: false,
-        lines: false,
-        bbar: [{
-            text: "Show/Edit Tree Config",
-            handler: function() {
-                treeConfigWin.show();
-                Ext.getCmp("treeconfig").setValue(treeConfig);
-            }
-        }]
+        lines: false
 		}
     //});
 	
@@ -237,11 +225,7 @@ Ext.onReady(function() {
     	};
     
 	
-	
-
-	
-	
-	
+		
     new Ext.Viewport({
         layout: "border",
         defaults: {border: false},
