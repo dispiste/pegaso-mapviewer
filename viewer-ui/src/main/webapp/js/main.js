@@ -102,8 +102,6 @@ Ext.onReady(function() {
                 }
             )
 	]); 
-	//
-	//
 	
     var cardNav = function(compId){
     	var l = Ext.getCmp('west-tab-panel').getLayout();
@@ -113,12 +111,7 @@ Ext.onReady(function() {
     	Ext.getCmp('west-tab-panel').collapse();
     };
 	
-	
-	
-	
-	
-	
-		var LayerNodeUI = Ext.extend(GeoExt.tree.LayerNodeUI, new GeoExt.tree.TreeNodeUIEventMixin());
+	var LayerNodeUI = Ext.extend(GeoExt.tree.LayerNodeUI, new GeoExt.tree.TreeNodeUIEventMixin());
 	var treeConfig = [{
         nodeType: "gx_baselayercontainer",
 		text: 'Base Layers', // override 'Base Layer' Label for tree layer
@@ -149,12 +142,7 @@ Ext.onReady(function() {
 		{
         //border: true,
 		xtype: 'treepanel',
-        //region: "west",
-        //title: "Layers",
-        //width: 200,
-        //split: true,
-        //collapsible: true,
-        //collapseMode: "mini",
+		id: 'layersTab',
 		autoScroll: true,
 		enableDD: true, // POSIBILITAMOS QUE SE PUEDA HACER DRAG & DROP (EL SISTEMA AUTOMATICAMENTE COLOCA LOS LAYER SOBRE EL MAPA DE ACUERDO A LAS NUEVAS DISPOSICIONES)
 		loader: new Ext.tree.TreeLoader({
@@ -173,10 +161,8 @@ Ext.onReady(function() {
 		}, 
 		rootVisible: false,
         lines: false
-		}
+	}
     //});
-	
-	
 	
     var tabPanel = {
     		id: "west-tab-panel",
@@ -186,7 +172,6 @@ Ext.onReady(function() {
     	    region: 'west',
     	    bodyStyle: 'padding:15px',
     	    split: true,
-    	    //collapsible: true,
     	    collapseMode: 'mini',
     	    defaults: {border:false, plain:true},
     	    tbar: [{
@@ -211,20 +196,9 @@ Ext.onReady(function() {
 				{
 					id: 'legendTab',
 					html: "<p>Hi. I'm the legend panel.</p>"
-				}	
-		    /*
-			{
-    	        id: "layersTab",
-    	        html: "<p>Hi. I'm the layer tree panel.</p>"
-    	    },{
-    	        id: 'legendTab',
-    	        html: "<p>Hi. I'm the legend panel.</p>"
-    	    }
-			*/
+				}
 			]
     	};
-    
-	
 		
     new Ext.Viewport({
         layout: "border",
