@@ -1,5 +1,13 @@
 @CHARSET "ISO-8859-1";
 
+body {
+	font-family:helvetica,tahoma,verdana,sans-serif;
+	padding:20px;
+    padding-top:32px;
+    font-size:13px;
+	background-color:#fff !important;
+}
+
 img.mainPegasoLogo {
 	position: relative;
 	left: 5px;
