@@ -1,20 +1,15 @@
 /**
- * Copyright (c) 2008-2011 The Open Source Geospatial Foundation
+ * Copyright (c) 2008-2011 UThe Open Source Geospatial Foundation
+ * Copyright (c) 2012 Universitat Autonoma de Barcelona, Geography Department, SGR-Interfase Group.
  * 
  * Published under the BSD license.
  * See http://svn.geoext.org/core/trunk/geoext/license.txt for the full text
  * of the license.
  */
 
-/** api: example[mappanel-viewport]
- *  Map Panel (in a Viewport)
- *  -------------------------
- *  Render a map panel in a viewport.
- */
-
 var map; 
 var mapPanel;
-var tree; 
+var tree;
 
 Ext.onReady(function() {
 
@@ -61,8 +56,8 @@ Ext.onReady(function() {
 	//
 	// add layers to map 
 	map.addLayers([
-			new OpenLayers.Layer.WMS("Corine 90 100m",
-                "http://pegasosdi.uab.es/cgi-bin/mapserv?", {
+			new OpenLayers.Layer.WMS("Corine 1990 100m",
+                "http://pegasosdi.uab.es/ogc/wms?", {
                     layers: "CORINE_CLC90_100m",
                     transparent: true,
                     format: "image/gif"
@@ -72,30 +67,30 @@ Ext.onReady(function() {
                 }
             ),
             new OpenLayers.Layer.WMS("Corine 2000 100m",
-                "http://pegasosdi.uab.es/cgi-bin/mapserv?", {
+                "http://pegasosdi.uab.es/ogc/wms?", {
                     layers: "CORINE_CLC00_100m",
                     transparent: true,
-                    format: "image/gif"
+                    format: "image/png"
                 }, {
                     isBaseLayer: false,
                     buffer: 0
                 }
             ),
             new OpenLayers.Layer.WMS("Corine 2006 100m",
-                "http://pegasosdi.uab.es/cgi-bin/mapserv?", {
+                "http://pegasosdi.uab.es/ogc/wms?", {
                     layers: "CORINE_CLC06_100m",
                     transparent: true,
-                    format: "image/gif"
+                    format: "image/png"
                 }, {
                     isBaseLayer: false,
                     buffer: 0
                 }
             ),
 			new OpenLayers.Layer.WMS("Country Boundaries",
-                "http://pegasosdi.uab.es/cgi-bin/mapserv?", {
+                "http://pegasosdi.uab.es/ogc/wms?", {
                     layers: "CNTR_BN_03M_2006",
                     transparent: true,
-                    format: "image/gif"
+                    format: "image/png"
                 }, {
                     isBaseLayer: false,
                     buffer: 0
