@@ -15,6 +15,7 @@ var closeButtonWindow;
 
 var selectedNodeLayerTree;
 
+
 NodeMouseoverPlugin = Ext.extend(Object, {
     init: function(tree) {
         if (!tree.rendered) {
