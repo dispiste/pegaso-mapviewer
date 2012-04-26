@@ -36,3 +36,6 @@ div.mainPegasoLogo {
   height:10 px ;
   width: 10 px 	;
 } 
+.p-close-btn{
+  background-image: url(../externals/ext-3.4.0/resources/images/pegaso/layout/tab-close-on.gif) !important;
+} 
