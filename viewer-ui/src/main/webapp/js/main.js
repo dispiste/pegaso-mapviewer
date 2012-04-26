@@ -8,7 +8,8 @@
  */
 
 var map; 
-var mapPanel;
+var mapPanel ; 
+var legendPanel;
 var tree;
 
 Ext.onReady(function() {
@@ -53,6 +54,8 @@ Ext.onReady(function() {
 	
     map = new OpenLayers.Map(options);
 	
+	map.addControl(new OpenLayers.Control.LayerSwitcher());
+	
 	//
 	// add layers to map 
 	map.addLayers([
@@ -61,6 +64,7 @@ Ext.onReady(function() {
                     layers: "CORINE_CLC90_100m",
                     transparent: true,
                     format: "image/gif"
+                }, {
                 }, {
                     isBaseLayer: false,
                     buffer: 0
@@ -107,6 +111,7 @@ Ext.onReady(function() {
     };
 	
 	var LayerNodeUI = Ext.extend(GeoExt.tree.LayerNodeUI, new GeoExt.tree.TreeNodeUIEventMixin());
+	
 	var treeConfig = [{
         nodeType: "gx_baselayercontainer",
 		text: 'Base Layers', // override 'Base Layer' Label for tree layer
@@ -132,32 +137,74 @@ Ext.onReady(function() {
         }
     }
 	];
-	treeConfig = new OpenLayers.Format.JSON().write(treeConfig, true);
-	tree = //new Ext.tree.TreePanel({
-		{
-        //border: true,
-		xtype: 'treepanel',
-		id: 'layersTab',
-		autoScroll: true,
-		enableDD: true, // POSIBILITAMOS QUE SE PUEDA HACER DRAG & DROP (EL SISTEMA AUTOMATICAMENTE COLOCA LOS LAYER SOBRE EL MAPA DE ACUERDO A LAS NUEVAS DISPOSICIONES)
-		loader: new Ext.tree.TreeLoader({
-            applyLoader: false
-            , uiProviders: {
-                "layernodeui": LayerNodeUI
-            }
-        }),
-        root: {
-		    children: Ext.decode(treeConfig)
-	    },
-		listeners: {
-			 'click': function(node, event){
-					console.log(node);
+	
+	//treeConfig = new OpenLayers.Format.JSON().write(treeConfig, true); // take a config object and serializes to a JSON string 
+	
+	tree = 	{
+				xtype: 'treepanel',
+				id: 'layersTab',
+				autoScroll: true,
+				enableDD: true, // POSIBILITAMOS QUE SE PUEDA HACER DRAG & DROP (EL SISTEMA AUTOMATICAMENTE COLOCA LOS LAYER SOBRE EL MAPA DE ACUERDO A LAS NUEVAS DISPOSICIONES)
+				loader: new Ext.tree.TreeLoader({
+					applyLoader: false
+					, uiProviders: {
+						"layernodeui": LayerNodeUI
+					}
+				}),
+				root: {
+				//    children: Ext.decode(treeConfig) // in case we have json string as config inputs !
+					  children: treeConfig
+				},
+				listeners: {
+					 'click': function(node, event){
+							console.log(node);
+					}
+				}, 
+				rootVisible: false,
+				lines: false
 			}
-		}, 
-		rootVisible: false,
-        lines: false
-	}
-    //});
+   
+	
+	// mapPanel defined before viewport 
+	
+	mapPanel = new GeoExt.MapPanel({
+					region: "center",
+					id: "mappanel",
+					xtype: "gx_mappanel",
+					map: map,
+					layers: [layer],
+					extent: extent,
+					split: true
+			});
+			
+			
+	// SET legendURl property to layers associated to Ext Object ( mapPanel.layers.getAt(X) )
+	
+	mapPanel.layers.getAt(1).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC90_100m&format=image/png&STYLE=default");
+	mapPanel.layers.getAt(2).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC00_100m&format=image/png&STYLE=default");
+	mapPanel.layers.getAt(3).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC06_100m&format=image/png&STYLE=default");
+	mapPanel.layers.getAt(4).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CNTR_BN_03M_2006&format=image/png&STYLE=default");
+			
+	
+	//map.addControl(new OpenLayers.Control.LayerSwitcher());
+	
+	
+	//legendPanel 
+	
+	legendPanel = { 	
+				xtype: 'gx_legendpanel', 
+				id: 'legendTab',
+				defaults: {
+					labelCls: 'mylabel',
+					style: 'padding:5px'
+				},
+				bodyStyle: 'padding:5px',
+				width: 400,
+				autoScroll: true,
+				region: 'west'
+				}
+ 
+	//tabPanel containing tree and legendPanel items
 	
     var tabPanel = {
     		id: "west-tab-panel",
@@ -187,14 +234,14 @@ Ext.onReady(function() {
     	        iconCls: 'p-collapse-button',
     	        handler: extendMap.createDelegate(this, [])
     	    }],
-    	    items: [tree,
-				{
-					id: 'legendTab',
-					html: "<p>Hi. I'm the legend panel.</p>"
-				}
-			]
+    	    items: [
+					tree, 
+					legendPanel
+					]
     	};
-		
+	
+
+	
     new Ext.Viewport({
         layout: "border",
         defaults: {border: false},
@@ -202,16 +249,11 @@ Ext.onReady(function() {
             region: "north",
             contentEl: "northDiv",
             height: 80
-        }, {
-            region: "center",
-            id: "mappanel",
-            xtype: "gx_mappanel",
-            map: map,
-            layers: [layer],
-            extent: extent,
-            split: true
-        }, tabPanel
+        },
+		mapPanel,
+		tabPanel
         ]
     });
+	
     mapPanel = Ext.getCmp("mappanel");
 });
