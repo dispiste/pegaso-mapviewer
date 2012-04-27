@@ -152,17 +152,6 @@ Ext.onReady(function() {
     });
     
     var treeConfig = [{
-        nodeType: "gx_baselayercontainer",
-        text: 'Background', // override 'Base Layer' Label for tree layer
-        expanded: true,
-        layerStore: mapPanel.layers,
-        iconCls: 'icono3',
-        loader: {
-            baseAttrs: {
-                iconCls: 'icono5'
-            }
-        }
-    }, {
         nodeType: "gx_overlaylayercontainer",
         text: 'Thematic information', // override 'OverLay' Label for tree layer
         expanded: true, // aparece expandido ese nodo
@@ -176,6 +165,17 @@ Ext.onReady(function() {
                     action: "delete",
                     qtip: "delete"
                 }]
+            }
+        }
+    },{
+        nodeType: "gx_baselayercontainer",
+        text: 'Background', // override 'Base Layer' Label for tree layer
+        expanded: true,
+        layerStore: mapPanel.layers,
+        iconCls: 'icono3',
+        loader: {
+            baseAttrs: {
+                iconCls: 'icono5'
             }
         }
     }];
