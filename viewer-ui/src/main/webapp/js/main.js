@@ -31,9 +31,16 @@ Ext.onReady(function() {
     // the bluemarble WMS layer is used
     var google = false;
 
-    var options, layer;
+    var options = {
+        //projection: new OpenLayers.Projection("EPSG:900913"),
+        units: "m",
+        //allOverlays: true,
+        //maxExtent: new OpenLayers.Bounds(-20037508, -20037508,
+        //        20037508, 20037508.34)
+    };
+    var layer;
     var extent = new OpenLayers.Bounds(-5, 35, 15, 55);
-    
+    /*
     if (google) {
         options = {
             projection: new OpenLayers.Projection("EPSG:900913"),
@@ -53,14 +60,7 @@ Ext.onReady(function() {
             new OpenLayers.Projection("EPSG:4326"), options.projection
         );
 
-    } else {
-        layer = new OpenLayers.Layer.WMS(
-                "Global Imagery",
-                "http://pegasosdi.uab.es/ogc/wms?",
-                {layers: "NASA_BLUEMARBLE"},
-                {isBaseLayer: true}
-            );
-    }
+    }*/
 
     map = new OpenLayers.Map(options);
 
@@ -68,6 +68,13 @@ Ext.onReady(function() {
 
 	// add layers to map 
     map.addLayers([
+            new OpenLayers.Layer.WMS("Global Imagery",
+                "http://pegasosdi.uab.es/ogc/wms?", {
+                    layers: "NASA_BLUEMARBLE"
+                }, {
+                    isBaseLayer: true
+                }
+            ),
             new OpenLayers.Layer.WMS("Corine 1990 100m",
                 "http://pegasosdi.uab.es/ogc/wms?", {
                     layers: "CORINE_CLC90_100m",
@@ -122,13 +129,28 @@ Ext.onReady(function() {
         region: "center",
         id: "mappanel",
         map: map,
-        layers: [layer],
+        layers: [],
         extent: extent,
         split: true
     });
     
     var LayerNodeUI = Ext.extend(GeoExt.tree.LayerNodeUI, new GeoExt.tree.TreeNodeUIEventMixin());
 
+    var layerList = new GeoExt.tree.LayerContainer({
+        layerStore: mapPanel.layers,
+        expanded: true,
+        loader: {
+            baseAttrs: {
+                uiProvider: "layernodeui",
+                iconCls: 'icono5',
+                actions: [{
+                    action: "delete",
+                    qtip: "delete"
+                }]
+            }
+        }
+    });
+    
     var treeConfig = [{
         nodeType: "gx_baselayercontainer",
         text: 'Background', // override 'Base Layer' Label for tree layer
@@ -177,6 +199,7 @@ Ext.onReady(function() {
                 "layernodeui": LayerNodeUI
             }
         }),
+        //root: layerList,
         root: {
             children: treeConfig
         },
@@ -193,7 +216,7 @@ Ext.onReady(function() {
 	mapPanel.layers.getAt(4).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CNTR_BN_03M_2006&format=image/png&STYLE=default");
 			
 	
-	//map.addControl(new OpenLayers.Control.LayerSwitcher());
+	map.addControl(new OpenLayers.Control.LayerSwitcher());
 	
 	
 	//legendPanel 
