@@ -64,8 +64,6 @@ Ext.onReady(function() {
 
     map = new OpenLayers.Map(options);
 
-	map.addControl(new OpenLayers.Control.LayerSwitcher());
-
 	// add layers to map 
     map.addLayers([
             new OpenLayers.Layer.WMS("Global Imagery",
