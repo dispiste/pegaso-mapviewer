@@ -39,3 +39,24 @@ div.mainPegasoLogo {
 .p-close-btn{
   background-image: url(../externals/ext-3.4.0/resources/images/pegaso/layout/tab-close-on.gif) !important;
 } 
+
+.gx-tree-layer-actions {
+    float: right;
+}
+
+.gx-tree-layer-action {
+    background-position: center center;
+    background-repeat: no-repeat;
+    border: 0 none;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    width: 18px;
+}
+
+.gx-tree-layer-actions .delete {
+  background-image: url(../externals/ext-3.4.0/resources/images/pegaso/layout/tab-close-on.gif) !important;
+  height: 18px; 
+}
+

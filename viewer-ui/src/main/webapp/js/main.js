@@ -30,9 +30,7 @@ NodeMouseoverPlugin = Ext.extend(Object, {
             if (nodeId) {
                 selectedNodeLayerTree = tree.getNodeById(nodeId);
                 y = nodeEl.getTop();
-                x = nodeEl.getLeft();
-                //width = nodeEl.getWidth();
-                //height = nodeEl.getHeight();
+                x = nodeEl.getLeft()+nodeEl.getWidth()-2;
                 if(!closeButtonWindow){
                     var closeButton = new Ext.Button({
                         iconCls: 'p-close-btn',
@@ -46,8 +44,8 @@ NodeMouseoverPlugin = Ext.extend(Object, {
                     
                     closeButtonWindow = new Ext.Window({
                         layout:'fit',
-                        top: y,
-                        left: x,
+                        pageY: y,
+                        pageX: x,
                         width: 22,
                         height: 22,
                         frame: false,
@@ -70,6 +68,17 @@ NodeMouseoverPlugin = Ext.extend(Object, {
     },
 });
 
+function onAction(node, action, evt) {
+    // do nothing
+    
+    var layer = node.layer;
+    switch(action) {
+    case "delete":
+        layer.destroy();
+        break;
+    }
+};
+
 Ext.onReady(function() {
 
     // if true a google layer is used, if false
@@ -78,7 +87,6 @@ Ext.onReady(function() {
 
     var options, layer;
     var extent = new OpenLayers.Bounds(-5, 35, 15, 55);
-    var test = new OpenLayers.Bounds(3,2,2,2);
     
     if (google) {
 
@@ -165,11 +173,23 @@ Ext.onReady(function() {
     	Ext.getCmp('west-tab-panel').collapse();
     };
 
+    mapPanel = new GeoExt.MapPanel({
+        region: "center",
+        id: "mappanel",
+        map: map,
+        layers: [layer],
+        extent: extent,
+        split: true
+    });
+    
     var LayerNodeUI = Ext.extend(GeoExt.tree.LayerNodeUI, new GeoExt.tree.TreeNodeUIEventMixin());
+
+
     var treeConfig = [{
         nodeType: "gx_baselayercontainer",
-        text: 'Base Layers', // override 'Base Layer' Label for tree layer
+        text: 'Background', // override 'Base Layer' Label for tree layer
         expanded: true,
+        layerStore: mapPanel.layers,
         iconCls: 'icono3',
         loader: {
             baseAttrs: {
@@ -178,23 +198,32 @@ Ext.onReady(function() {
         }
     }, {
         nodeType: "gx_overlaylayercontainer",
-        text: 'Overlay Layers', // override 'OverLay' Label for tree layer
+        text: 'Thematic information', // override 'OverLay' Label for tree layer
         expanded: true, // aparece expandido ese nodo
-        // render the nodes inside this container with a radio button,
-        // and assign them the group "foo".
+        layerStore: mapPanel.layers,
         iconCls: 'icono3', 
         loader: {
             baseAttrs: {
                 uiProvider: "layernodeui",
-                iconCls: 'icono5' // parametro decisivo a la hora de cambiar el icono de los elementos hijos 
+                iconCls: 'icono5', // parametro decisivo a la hora de cambiar el icono de los elementos hijos
+                actions: [{
+                    action: "delete",
+                    qtip: "delete"
+                }]
             }
         }
-    }
-    ];
+    }];
 
-    treeConfig = new OpenLayers.Format.JSON().write(treeConfig, true);
     tree = new Ext.tree.TreePanel({
-        plugins: new NodeMouseoverPlugin(),
+        plugins: [
+                  new NodeMouseoverPlugin(),
+                  {
+                      ptype: "gx_treenodeactions",
+                      listeners: {
+                          action: onAction
+                      }
+                  }
+        ],
         xtype: 'treepanel',
         id: 'layersTab',
         autoScroll: true,
@@ -206,7 +235,7 @@ Ext.onReady(function() {
             }
         }),
         root: {
-            children: Ext.decode(treeConfig)
+            children: treeConfig
         },
         listeners: {
             'click': function(node, event){
@@ -221,7 +250,7 @@ Ext.onReady(function() {
             id: "west-tab-panel",
             layout:'card',
             activeItem: 0,
-            width: 200,
+            width: 250,
             region: 'west',
             bodyStyle: 'padding:15px',
             split: true,
@@ -260,18 +289,15 @@ Ext.onReady(function() {
             region: "north",
             contentEl: "northDiv",
             height: 80
-        }, {
-            region: "center",
-            id: "mappanel",
-            xtype: "gx_mappanel",
-            map: map,
-            layers: [layer],
-            extent: extent,
-            split: true
-        }, tabPanel
-        ]
+        }, mapPanel, tabPanel]
     });
-    mapPanel = Ext.getCmp("mappanel");
+    
+    /*
+     * Those are necessary to hide the "delete layer" window when the
+     * cursor is out of the layer tree. We can't use on mouseout of
+     * layertree because then it flickers when the mouse is on the
+     * 'delete layer' window.
+     */
     var onMapMouseover = function(e, t) {
         if(closeButtonWindow){
             closeButtonWindow.hide();
