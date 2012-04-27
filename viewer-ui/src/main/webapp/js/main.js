@@ -204,28 +204,20 @@ Ext.onReady(function() {
 		listeners: {
 		}, 
 		rootVisible: false,
+		bodyStyle: "padding: 5px",
 		lines: false
 	});
-	
-	// SET legendURl property to layers associated to Ext Object ( mapPanel.layers.getAt(X) )
-	mapPanel.layers.getAt(1).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC90_100m&format=image/png&STYLE=default");
-	mapPanel.layers.getAt(2).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC00_100m&format=image/png&STYLE=default");
-	mapPanel.layers.getAt(3).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC06_100m&format=image/png&STYLE=default");
-	mapPanel.layers.getAt(4).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CNTR_BN_03M_2006&format=image/png&STYLE=default");
-	
+
 	//legendPanel 
 	legendPanel = { 	
-				xtype: 'gx_legendpanel', 
-				id: 'legendTab',
-				defaults: {
-					labelCls: 'mylabel',
-					style: 'padding:5px'
-				},
-				bodyStyle: 'padding:5px',
-				width: 400,
-				autoScroll: true,
-				region: 'west'
-				}
+		xtype: 'gx_legendpanel', 
+		id: 'legendTab',
+		defaults: {
+			labelCls: 'mylabel',
+			style: "padding: 10px"
+		},
+		autoScroll: true
+	}
  
 	//tabPanel containing tree and legendPanel items
 	var tabPanel = {
@@ -234,7 +226,7 @@ Ext.onReady(function() {
 			activeItem: 0,
 			width: 250,
 			region: 'west',
-			bodyStyle: 'padding:15px',
+			bodyStyle: 'padding: 0px',
 			split: true,
 			collapseMode: 'mini',
 			defaults: {border:false, plain:true},
