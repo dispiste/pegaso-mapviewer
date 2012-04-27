@@ -214,10 +214,6 @@ Ext.onReady(function() {
 	mapPanel.layers.getAt(2).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC00_100m&format=image/png&STYLE=default");
 	mapPanel.layers.getAt(3).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC06_100m&format=image/png&STYLE=default");
 	mapPanel.layers.getAt(4).set("legendURL", "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CNTR_BN_03M_2006&format=image/png&STYLE=default");
-			
-	
-	map.addControl(new OpenLayers.Control.LayerSwitcher());
-	
 	
 	//legendPanel 
 	legendPanel = { 	
