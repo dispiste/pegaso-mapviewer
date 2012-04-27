@@ -10,63 +10,6 @@
 var map; 
 var mapPanel;
 var tree;
-var closeButtonWindow;
-
-var selectedNodeLayerTree;
-
-NodeMouseoverPlugin = Ext.extend(Object, {
-    init: function(tree) {
-        if (!tree.rendered) {
-            tree.on('render', function() {this.init(tree)}, this);
-            return;
-        }
-        this.tree = tree;
-        tree.body.on('mouseover', this.onTreeMouseover, this, {delegate: 'div.x-tree-node-leaf'});
-    },
-    onTreeMouseover: function(e, t) {
-        var nodeEl = Ext.fly(t);
-        if (nodeEl) {
-            var nodeId = nodeEl.getAttributeNS('ext', 'tree-node-id');
-            if (nodeId) {
-                selectedNodeLayerTree = tree.getNodeById(nodeId);
-                y = nodeEl.getTop();
-                x = nodeEl.getLeft()+nodeEl.getWidth()-2;
-                if(!closeButtonWindow){
-                    var closeButton = new Ext.Button({
-                        iconCls: 'p-close-btn',
-                        handler : function() {
-                            if (selectedNodeLayerTree) {
-                                map.removeLayer(selectedNodeLayerTree.layer);
-                                closeButtonWindow.hide();
-                            }
-                        } 
-                      });
-                    
-                    closeButtonWindow = new Ext.Window({
-                        layout:'fit',
-                        pageY: y,
-                        pageX: x,
-                        width: 22,
-                        height: 22,
-                        frame: false,
-                        shadow: false,
-                        border: true,
-                        bodyBorder: false,
-                        resizable: false,
-                        draggable: false,
-                        closable: false,
-                        items: closeButton
-                    });
-                }
-                else {
-                    closeButtonWindow.setPosition(x, y);
-                }
-                
-                closeButtonWindow.show(this);
-            }
-        }
-    },
-});
 
 function onAction(node, action, evt) {
     // do nothing
@@ -216,7 +159,6 @@ Ext.onReady(function() {
 
     tree = new Ext.tree.TreePanel({
         plugins: [
-                  new NodeMouseoverPlugin(),
                   {
                       ptype: "gx_treenodeactions",
                       listeners: {
@@ -292,24 +234,5 @@ Ext.onReady(function() {
         }, mapPanel, tabPanel]
     });
     
-    /*
-     * Those are necessary to hide the "delete layer" window when the
-     * cursor is out of the layer tree. We can't use on mouseout of
-     * layertree because then it flickers when the mouse is on the
-     * 'delete layer' window.
-     */
-    var onMapMouseover = function(e, t) {
-        if(closeButtonWindow){
-            closeButtonWindow.hide();
-        }
-    };
-    mapPanel.body.on('mouseover', onMapMouseover);
-    
-    var northDiv = Ext.get("northDiv");
-    var onNorthMouseover = function(e, t) {
-        if(closeButtonWindow){
-            closeButtonWindow.hide();
-        }
-    };
-    northDiv.on('mouseover', onNorthMouseover);
+
 });
