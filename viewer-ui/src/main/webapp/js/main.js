@@ -11,8 +11,10 @@ var map;
 var mapPanel;
 var tree;
 
+/**
+ *  TreePanel actions
+ */
 function onAction(node, action, evt) {
-    // do nothing
     
     var layer = node.layer;
     switch(action) {
@@ -32,7 +34,6 @@ Ext.onReady(function() {
     var extent = new OpenLayers.Bounds(-5, 35, 15, 55);
     
     if (google) {
-
         options = {
             projection: new OpenLayers.Projection("EPSG:900913"),
             units: "m",
@@ -59,7 +60,6 @@ Ext.onReady(function() {
                 {isBaseLayer: true}
             );
     }
-
 
     map = new OpenLayers.Map(options);
 
@@ -127,7 +127,6 @@ Ext.onReady(function() {
     
     var LayerNodeUI = Ext.extend(GeoExt.tree.LayerNodeUI, new GeoExt.tree.TreeNodeUIEventMixin());
 
-
     var treeConfig = [{
         nodeType: "gx_baselayercontainer",
         text: 'Background', // override 'Base Layer' Label for tree layer
@@ -180,9 +179,6 @@ Ext.onReady(function() {
             children: treeConfig
         },
         listeners: {
-            'click': function(node, event){
-                //console.log(node);
-            }
         }, 
         rootVisible: false,
         lines: false
