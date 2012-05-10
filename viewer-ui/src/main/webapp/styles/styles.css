@@ -59,4 +59,8 @@ div.mainPegasoLogo {
   background-image: url(../externals/ext-3.4.0/resources/images/pegaso/layout/tab-close-on.gif) !important;
   height: 18px; 
 }
-
+.btnInfoByPoint{
+  background-image:url(../img/information.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
