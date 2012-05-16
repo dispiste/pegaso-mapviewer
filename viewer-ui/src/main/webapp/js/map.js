@@ -91,6 +91,26 @@ function initMapPanel() {
 					buffer: 0
 				}
 			),
+			new OpenLayers.Layer.WMS("ESA Globcorine 2005",
+				"http://pegasosdi.uab.es/ogc/wms?", {
+					layers: "GLOBCORINE_2005",
+					transparent: true,
+					format: "image/png"
+				}, {
+					isBaseLayer: false,
+					buffer: 0
+				}
+			),
+			new OpenLayers.Layer.WMS("ESA Globcorine 2009",
+				"http://pegasosdi.uab.es/ogc/wms?", {
+					layers: "GLOBCORINE_2009",
+					transparent: true,
+					format: "image/png"
+				}, {
+					isBaseLayer: false,
+					buffer: 0
+				}
+			),
 			new OpenLayers.Layer.WMS("Country Boundaries",
 				"http://pegasosdi.uab.es/ogc/wms?", {
 					layers: "CNTR_BN_03M_2006",
