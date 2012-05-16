@@ -210,7 +210,7 @@ OpenLayers.Layer.Google.v3 = {
             for (var i=layers.length-1; i>=0; --i) {
                 layer = layers[i];
                 if (layer instanceof OpenLayers.Layer.Google &&
-                            layer.visibility === true && layer.inRange === true) {
+                		layer.visibility === true && layer.calculateInRange() === true) {
                     type = layer.type;
                     visible = true;
                     break;
