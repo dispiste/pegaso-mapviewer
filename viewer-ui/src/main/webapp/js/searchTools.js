@@ -11,9 +11,8 @@
  *  featured layers, etc
  */
  
-var mapPanel;  
-var comboGeo; 
-var geocoder; 
+var comboGeo;
+var geocoder;
 
 function initSearchTools() {
 	
