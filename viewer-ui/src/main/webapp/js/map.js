@@ -171,7 +171,7 @@ function initMapPanel() {
 		id: "mappanel",
 		map: map,
 		layers: [],
-		center: new OpenLayers.LonLat(10.2,48.9).transform(new OpenLayers.Projection('EPSG:4326'),new OpenLayers.Projection('EPSG:900913')),
+		center: new OpenLayers.LonLat(18.89,38.58).transform(new OpenLayers.Projection('EPSG:4326'),new OpenLayers.Projection('EPSG:900913')),
 		zoom: 4,
 		//extent: extent,
 		split: true,
