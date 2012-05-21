@@ -9,6 +9,7 @@
 var legendPanel;
 var tree;
 var tabPanel;
+var selected_layer;  
 
 /**
  *  TreePanel actions
@@ -23,12 +24,25 @@ function onAction(node, action, evt) {
 	}
 };
 
+/*
+//TAKE A LOOK AT: http://www.sourcepole.ch/2010/9/28/understanding-what-s-going-on-in-extjs
+// http://stackoverflow.com/questions/2623042/extjs-tree-selecting-node-after-creating-the-tree
+ function select_node(node) {
+          node.eachChild( function(child) { 
+            if(child.attributes.real_id == real_id ) {
+              child.select();
+              //categories_panel.un('expandnode', select_node);
+            }
+          });
+        };
+*/
 
 
 /**
  * Initializes the layerTree and the legend
  */
 function initLeftTabs() {
+	
 	var cardNav = function(compId){
 		var l = Ext.getCmp('west-tab-panel').getLayout();
 		l.setActiveItem(compId);
@@ -107,12 +121,36 @@ function initLeftTabs() {
 			children: treeConfig
 		},
 		listeners: {
-		}, 
+				'click': function(node,event){
+									//console.log(node.layer.params.LAYERS); 
+									selected_layer = node.layer.params.LAYERS; 
+				}
+		}
+		, 
 		rootVisible: false,
 		bodyStyle: "padding: 5px",
 		lines: false
 	});
 
+	
+	// alerta de los eventos sobre el treePanel
+	Ext.util.Observable.capture(tree, function(event) {                                                                                                        
+                                         console.log("We have got an event in myTree");
+                                         console.log(event); 
+										}
+	);
+	
+	/*
+	tree.getSelectionModel().on('selectionchange', function(selMod,node){
+							//alert('indice ' + rowidx); 
+							console.log(tree.selModel.selNode.layer.params.LAYERS); 
+	})
+	*/
+	
+	//tree.on('expandnode', select_node);
+	
+	
+	
 	//legendPanel 
 	legendPanel = { 	
 		xtype: 'gx_legendpanel', 
@@ -159,4 +197,5 @@ function initLeftTabs() {
 			]
 		};
 
+		
 }

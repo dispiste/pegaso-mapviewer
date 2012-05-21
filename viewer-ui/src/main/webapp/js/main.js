@@ -11,9 +11,15 @@
 
 Ext.onReady(function() {
 
+	
 	initMapPanel();
 	initSearchTools();
 	initLeftTabs();
+	//initToolbar();
+	initInfoByPoint(); 
+	
+	
+	
 	
 	new Ext.Viewport({
 		layout: "border",
