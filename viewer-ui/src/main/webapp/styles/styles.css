@@ -64,3 +64,38 @@ div.mainPegasoLogo {
   height:16 px !important;
   width: 16 px !important;
 }
+.btnPrintServerPDF{
+  background-image:url(../img/pdf.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
+.botonPan{
+  background-image:url(../img/icon_pan.png) !important;
+  height:16 px !important;
+  width: 16 px !important;
+}
+.botonZoomIn{
+  background-image:url(../img/icon_zoomIn.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
+.botonZoomOut{
+  background-image:url(../img/icon_zoomOut.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
+.botonPrintClientPDF{
+  background-image:url(../img/printer.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
+.botonNext{
+  background-image:url(../img/resultset_next.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
+.botonPrevious{
+  background-image:url(../img/resultset_previous.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
