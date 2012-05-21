@@ -1,0 +1,27 @@
+// ESTO TE DA UN ARRAY DE OBJECTOS
+
+caca = mapPanel.items.itemAt(0).items.items; 
+
+// LO RECORRES CON EXT.EACH Y AHI TIENES CADA OBJETO.
+
+Ext.each(caca, function(item,indx){
+	// ACCEDES A LA PROPIEDAD pressed DE CADA UNO DE SOS OBJETOS 
+	// console.log(item.events); // te da los eventos de cada uno de los botones
+	// http://mapfish.org/doc/tutorials/extjs.html#events
+	item.events.on('toggle', function() {
+			alert('Hola');
+	});	
+	
+	//console.log(item.pressed);
+		
+});
+
+RECOGER EL EVENTO PRESS PARA UN BOTON, Y CUANDO PRESIONESMOS UN BOTON, SE DESPRESSIONEN EL RESTO
+
+
+caca = mapPanel.items.itemAt(0).items.items; Ext.each(caca, function(item,indx){	
+// ESTO TE DA UN ARRAY DE OBJETOS CON EVENTOS PARA CADA ELEMENTO DEL ARRAY
+        for (i in item) {
+  i.on('toggle',function(){alert('Hola')});
+}
+	});
