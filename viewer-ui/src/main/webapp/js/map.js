@@ -8,14 +8,19 @@
 
 var map; 
 var mapPanel;
+<<<<<<< HEAD
 var extent; 
 //var comboGeo;
 
+=======
+var comboGeo;
+>>>>>>> 899aec172d513fcb077889f0ef7be72bd7fdfdd5
 
 /**
  *  TreePanel actions
  */
  
+<<<<<<< HEAD
 function initMapPanel() {	
 
 	// if true a google layer is used, if false
@@ -23,46 +28,22 @@ function initMapPanel() {
 	// var google = false;
 	//var google = true; 
 
+=======
+function initMapPanel() {
+>>>>>>> 899aec172d513fcb077889f0ef7be72bd7fdfdd5
 	var options = {
+		sphericalMercator: true,
 		projection: new OpenLayers.Projection("EPSG:900913"),
 		units: "m"
 		, maxExtent: new OpenLayers.Bounds(-19567879.238281,-19567879.068281,19567879.238281,19567879.408281)
 		, maxResolution: 156543.0339
+<<<<<<< HEAD
 		, controls: []
+=======
+>>>>>>> 899aec172d513fcb077889f0ef7be72bd7fdfdd5
 	};
 	
-	var layer;
-	
-	//var extent = new OpenLayers.Bounds(-155228,4379760,5418828,6517550);
-	
-	//var extent = new OpenLayers.Bounds(-5, 35, 15, 55).transform(new OpenLayers.Projection('EPSG:4326'), new OpenLayers.Projection('EPSG:900913'))
-	
-	/*
-	if (google) {
-		options = {
-			projection: new OpenLayers.Projection("EPSG:900913"),
-			units: "m",
-			numZoomLevels: 18,
-			maxResolution: 156543.0339,
-			maxExtent: new OpenLayers.Bounds(-20037508, -20037508,
-											 20037508, 20037508.34)
-		};
-
-		layer = new OpenLayers.Layer.Google(
-			"Google Satellite",
-			{type: G_SATELLITE_MAP, sphericalMercator: true}
-		);
-
-		extent.transform(
-			new OpenLayers.Projection("EPSG:4326"), options.projection
-		);
-
-	}
-	*/
-	
 	map = new OpenLayers.Map(options);
-
-	
 
 	// add layers to map 
 	map.addLayers([
@@ -81,7 +62,7 @@ function initMapPanel() {
 						 maxExtent: new OpenLayers.Bounds(-19567879.238281,-19567879.068281,19567879.238281,19567879.408281)
 						}
 			),
-			new OpenLayers.Layer.WMS("Global Imagery",
+			new OpenLayers.Layer.WMS("NASA Global Imagery",
 				"http://pegasosdi.uab.es/ogc/wms?", {
 					layers: "NASA_BLUEMARBLE"
 				}, {
@@ -95,7 +76,8 @@ function initMapPanel() {
 					format: "image/gif"
 				}, {
 					isBaseLayer: false,
-					buffer: 0
+					buffer: 0,
+					visibility: false
 				}
 			),
 			new OpenLayers.Layer.WMS("Corine 2000 100m",
@@ -105,7 +87,8 @@ function initMapPanel() {
 					format: "image/png"
 				}, {
 					isBaseLayer: false,
-					buffer: 0
+					buffer: 0,
+					visibility: false
 				}
 			),
 			new OpenLayers.Layer.WMS("Corine 2006 100m",
@@ -116,6 +99,28 @@ function initMapPanel() {
 				}, {
 					isBaseLayer: false,
 					buffer: 0
+				}
+			),
+			new OpenLayers.Layer.WMS("ESA Globcorine 2005",
+				"http://pegasosdi.uab.es/ogc/wms?", {
+					layers: "GLOBCORINE_2005",
+					transparent: true,
+					format: "image/png"
+				}, {
+					isBaseLayer: false,
+					buffer: 0,
+					visibility: false
+				}
+			),
+			new OpenLayers.Layer.WMS("ESA Globcorine 2009",
+				"http://pegasosdi.uab.es/ogc/wms?", {
+					layers: "GLOBCORINE_2009",
+					transparent: true,
+					format: "image/png"
+				}, {
+					isBaseLayer: false,
+					buffer: 0,
+					visibility: false
 				}
 			),
 			new OpenLayers.Layer.WMS("Country Boundaries",
@@ -143,12 +148,15 @@ function initMapPanel() {
 		id: "mappanel",
 		map: map,
 		layers: [],
-		center: new OpenLayers.LonLat(10.2,48.9).transform(new OpenLayers.Projection('EPSG:4326'),new OpenLayers.Projection('EPSG:900913')),
+		center: new OpenLayers.LonLat(18.89,38.58).transform(new OpenLayers.Projection('EPSG:4326'),new OpenLayers.Projection('EPSG:900913')),
 		zoom: 4,
 		//extent: extent,
 		split: true, 
 		plugins:[] // importante para añadir dinámicamente plugins una vez instanciado un panel
 	});
+<<<<<<< HEAD
 	
 	
+=======
+>>>>>>> 899aec172d513fcb077889f0ef7be72bd7fdfdd5
 };
