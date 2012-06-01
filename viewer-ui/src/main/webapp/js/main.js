@@ -13,9 +13,10 @@ Ext.onReady(function() {
 
 	
 	initMapPanel();
+	//returnActiveLayersWithClone();
+	returnActiveLayersII();
 	initSearchTools();
 	initLeftTabs();
-	//initToolbar();
 	initInfoByPoint(); 
 	
 	
