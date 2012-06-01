@@ -1,0 +1,206 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Pegaso Map Viewer</title>
+        <script type="text/javascript" src="externals/ext-3.4.0/adapter/ext/ext-base.js"></script>
+        <script type="text/javascript" src="externals/ext-3.4.0/ext-all.js"></script>
+        <link rel="stylesheet" type="text/css" href="externals/ext-3.4.0/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="externals/ext-3.4.0/resources/css/pegaso.css" />
+		<link rel="stylesheet" type="text/css" href="externals/GeoExt-1.10/resources/css/popup.css">
+		<script src="http://maps.google.com/maps/api/js?v=3.3&sensor=false"></script> 
+		<link rel="stylesheet" href="styles/css_scalebar/scalebar-thin.css" type="text/css">  
+        <script src="externals/OpenLayers-2.11/OpenLayers.js"></script> 
+        <script type="text/javascript" src="externals/GeoExt-1.10/lib/GeoExt.js"></script>
+		<script type="text/javascript" src="js/map_print_good.js"></script> 
+		<!-- <script type="text/javascript" src="js/map_PRINT_GeoExt2.js"></script> -->
+        <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+		<script src="js/scaleBar.js"></script>
+		<style type="text/css">
+		 #wrapp {
+			padding-top: 100px
+		 }
+		</style>
+	
+  
+        <script type="text/javascript">
+			
+		
+		var MAP = opener.map;  
+		var GEOinherited = opener.window.GeoExt;
+		var newWin = this.window;
+		var legendActObj; 
+		
+		var centerMAP = MAP.getCenter();
+		var zoomMAP = MAP.getZoom();
+		var map_print; 
+		var mapPanel_print;
+		
+		
+		/*
+		MAP.getSize().clone().w = "800px";
+		MAP.getSize().clone().w = "800px";
+		MAP.updateSize();
+		*/
+
+		
+		
+		
+		// Load a web page to print map, overview map, scale and legends 
+		// It is opened form a parent browser window
+		
+		
+        Ext.onReady(function() {
+			
+					initMapPanel_print(); // loaded from "js/map_print_good.js"
+					
+					map_print.addControl(new OpenLayers.Control.ScaleBar(
+													{
+													div: document.getElementById("scalBar"),
+													abbreviateLabel: true, // kilometers to KM
+													minWidth: 75, // default is 100 pixels
+													maxWidth: 150, // default is 200 pixels
+													divisions: 4,   // default is 2
+													subdivisions: 1 // default is 2
+													}
+					));
+					
+										
+					$('overvMap_print').innerHTML = opener.document.getElementById('overvMap').children[0].children[0].innerHTML
+					
+					
+					var mapita = new GeoExt.MapPanel({
+											renderTo: Ext.get('panel2'),
+											id: "mappanel",
+											width: 700,
+											height: 700,
+											map: map_print,
+											//layers: map_print.layers,
+											//layers: opener.map.activeLayers,
+											//layers: opener.map.visiblelayers,
+											//layers: activelayers,
+											//layers: MAP.visibleLayers(),
+											layers:[],	
+											center: centerMAP,
+											zoom: zoomMAP,
+											split: true 
+					});
+					
+					
+							
+					
+					
+					// JS object with namelayer and url_legend as attributes
+					// it will be used to construct dynamically legends to div in print html page
+					// it should take into account the adding layers by users!! 
+					// legendObj.push( .... stuff for newly added layer ....)
+					
+					legendObj = [
+								{
+									"name_layer": "Corine 1990 100m",
+									"url_legend": "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC90_100m&format=image/png&STYLE=default"
+								},
+								{
+									"name_layer": "Corine 2000 100m",
+									"url_legend": "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC00_100m&format=image/png&STYLE=default"
+								},
+								{
+									"name_layer": "Corine 2006 100m",
+									"url_legend": "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CORINE_CLC06_100m&format=image/png&STYLE=default"
+								},
+								{
+									"name_layer": "NUTS",
+									"url_legend": "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=NUTS_BN_03M_2006&format=image/png&STYLE=default"
+								},
+								{
+									"name_layer": "Country Boundaries",
+									"url_legend": "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=CNTR_BN_03M_2006&format=image/png&STYLE=default"
+									
+								},
+								{
+									"name_layer": "ESA Globcorine 2005",
+									"url_legend": "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=GLOBCORINE_2005&format=image/png&STYLE=default"
+								},
+								{
+									"name_layer": "ESA Globcorine 2009",
+									"url_legend": "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=GLOBCORINE_2009&format=image/png&STYLE=default"
+								}
+								]
+					
+					
+					
+				
+					// generate legendActObj dynamically according to active layers in the map 
+					
+					legendActObj = [];
+					
+					for (i=1;i<=opener.activeLayers.length-1;i++) {
+					
+							// console.log(opener.activeLayers[i]);
+							legendActObj.push({
+										"name_layer" : opener.activeLayers[i].name, 
+ 										"url_legend" : "http://pegasosdi.uab.es/ogc/wms?version=1.1.1&service=WMS&request=GetLegendGraphic&layer=" + opener.activeLayers[i].params.LAYERS + "&format=image/png&STYLE=default"
+							});
+					};
+					
+					
+					
+					
+					// Adds dynamically div elements to DOM 
+					// Also adds attributes (img, p) to div in order to include title and imagen for map legends
+					
+					function addDivsDynamically(i,titulo_legend,url_legend){
+									// create DIV 
+									var divTag = document.createElement("div");
+									divTag.id = "div_"+i; 
+									divTag.className = "dynamicDiv";  
+									// insert paragraph with title for legend
+									var parrafo = document.createElement("p");
+									parrafo.id = "pp_"+i;
+									parrafo.style.padding = "20px";
+									parrafo.appendChild(document.createTextNode(titulo_legend));
+									// insert image corresponding to URL legend
+									var imagen = document.createElement("img");
+									imagen.id = "im_"+i;
+									imagen.src = url_legend;
+									divTag.appendChild(parrafo);
+									divTag.appendChild(imagen);
+									document.body.appendChild(divTag); 
+					}
+					
+					
+					
+									
+					
+					for (i=0;i<=legendActObj.length-1;i++){
+							
+							addDivsDynamically(i,legendActObj[i].name_layer,legendActObj[i].url_legend);
+						
+					}
+					
+					
+		});
+				
+        </script>
+    </head>
+	<body>
+	<div id="northDiv">
+    	<img class="mainPegasoLogo" alt="Pegaso logo" src="img/pegaso_logo.png" />
+    </div>
+	<div id="no" style="width=100px; height:30px;">
+    </div>
+	<div id="panel2" >
+	</div>
+	<!-- <div id="no" style="width=100px; height:30px;"></div> -->
+	<div id="wrapp" style="width:700px">
+	<div id="scalBar" style="width=300px; height:50px;"></div>
+	<!-- <div id="overvMap_print" style="width: 210px; height: 100px;"></div> -->
+	<div id="overvMap_print" style="width: 210px; height: 100px;"></div>
+	</div>
+	<div id="no2" style="width=100px; height:30px;">
+    </div>
+	<div id="legenda" align="center" style="padding-bottom: 40px">
+		<h2> Legends for visible layers </h2>
+	</div>
+	<!-- here legends div will be added. Use FireBug and look at them  -->
+	</body>
+   </html> 
