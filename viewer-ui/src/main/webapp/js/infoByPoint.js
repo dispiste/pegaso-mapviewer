@@ -7,14 +7,18 @@
  * of the license.
  */
 
-//var printProvider, printExtent; 
-var Mapserver_output; 
+//var printProvider, printExtent; // saved in case of server printing
+var msOutput; 
+//var SALIDORRA, mas, menos; 
 var myTmpl, myTmplNUTS, myTmplCLC, myTmplCNTR, myTmplNoResults; 
+var btnZoomIn, btnZoomOut, btnPan, tooglegroup; 
 // Selected Layer from treePanel. Only info-by-point control for one layer 
 // It returns a string 
 //var selected_layer = Ext.getCmp('layersTab').selModel.selNode.layer.params.LAYERS; 
 //var selected_layer = "CORINE_CLC90_100m";   
-//var Layer_GFI_array; 
+//var arrGFILayers; 
+
+
 var arrayGFI; 
 
 		
@@ -26,17 +30,14 @@ function initInfoByPoint() {
 		
 
 		
-// esta function tomará como parametros el array resultado del getfeatureinfo, 
-// con resultado para varias capas, y la capa sobre la que queremos hacer el filtro (será la capa seleccionada desde un treePanel)
-// devuelve un array de elementos solo para la capa layerstr (string)
-// to iterate over arrays with ExtJS --> http://edspencer.net/2009/07/ext-js-iterator-functions.html
-// https://developer.mozilla.org/en/JavaScript/Reference/Statements/for...in
-// http://www.cssnewbie.com/emulate-a-foreach-loop-in-javascript/
+// This function will take as params an array resulting from getfeatureinfo request
+// with results for several layers. And layer on which we wish to make a filter (one selected since treePanel)
+// returns an array of elements only for layer named layerstr (string)
 
 		
 		
 		
-				function reduction_array(arrayGFI,layerstr){
+				function reductionArray(arrayGFI,layerstr){
 								var array_red = []; 	
 								if (!arrayGFI){	
 										arrayGFI = []; 
@@ -50,8 +51,9 @@ function initInfoByPoint() {
 				}; 
 				
 				
-				function asigna_template(layerstr){
+				function assignTemplate(layerstr){
 							switch (layerstr) {
+							
 									case "CNTR_BN_03M_2006":
 											myTmpl = myTmplCNTR;
 											break; 
@@ -69,16 +71,18 @@ function initInfoByPoint() {
 									default: 
 											myTmpl = myTmplNoResults; 
 											break; 
+											
 									}
 				};
 			
 		
 				
-				// OJO, if we do not click, Mapserver_output is undefined and no results will be shown as Layer_GFI_array is also undefined
+				// OJO, if we do not click, msOutput is undefined 
+				// and no results will be shown because arrGFILayers is also undefined
 				
 								
-				if (!Mapserver_output){
-						Mapserver_output = []; 
+				if (!msOutput){
+						msOutput = []; 
 				} 
 				
 				/*
@@ -89,7 +93,7 @@ function initInfoByPoint() {
 				*/
 				
 								
-				var info = new OpenLayers.Control.WMSGetFeatureInfo({
+				var ctrlInfo = new OpenLayers.Control.WMSGetFeatureInfo({
 						url: 'http://pegasosdi.uab.es/ogc/wms?', 
 						title: 'Identify features by clicking',
 						queryVisible: true,
@@ -97,19 +101,19 @@ function initInfoByPoint() {
 						maxFeatures: 3,
 						eventListeners: {
 							'getfeatureinfo': function(e) {
-										// muestra la respuesta del servidor a la peticion GetFeatureInfo
+										// It shows the server response to a GetFeatureInfo WMS request
 										// http://dev.openlayers.org/docs/files/OpenLayers/Control/WMSGetFeatureInfo-js.html#OpenLayers.Control.WMSGetFeatureInfo.events
 										msGMLOutput = e.text; 
 										// take a look at http://dev.openlayers.org/docs/files/OpenLayers/Format/WMSGetFeatureInfo-js.html#OpenLayers.Format.WMSGetFeatureInfo.read 
-										var parseador_MapServer_format = new OpenLayers.Format.WMSGetFeatureInfo();
+										var msParserFormat = new OpenLayers.Format.WMSGetFeatureInfo();
 										// This is an array of ouput elements corresponding to a click on the map 
-										var Mapserver_output = parseador_MapServer_format.read(msGMLOutput);
-										var Layer_GFI_array = reduction_array(Mapserver_output, selected_layer); 			
-										asigna_template(selected_layer); 							
-										/*if (Layer_GFI_array.length ==0){
+										var msOutput = msParserFormat.read(msGMLOutput);
+										var arrGFILayers = reductionArray(msOutput, selected_layer); 			
+										assignTemplate(selected_layer); 							
+										/*if (arrGFILayers.length ==0){
 											Ext.get('ventanita_id').createChild('<div>There is no result</div>');
 										}*/
-										myTmpl.overwrite(Ext.getCmp('ventanita_id').body, Layer_GFI_array); 	
+										myTmpl.overwrite(Ext.getCmp('ventanita_id').body, arrGFILayers); 	
 										// console.log(e.xy);        // POINT in PIXELS
 										// console.log(e.features);  // ARRAY
 										// console.log(e);           // OBJETO
@@ -118,19 +122,18 @@ function initInfoByPoint() {
 				});
 				
 				
-				map.addControl(info);
+				map.addControl(ctrlInfo);
 				
 				// control is activated by a pertinent button
 				
 				
 				
-				// we assign getfeatureinfo control to btn_infobypoint with a GeoExt Action (button + control)
-				
-				// We wish that by clicking on the map, if btn_infobypoint has been pressed. Info control is activated and window result shown
+				// we assign getfeatureinfo control to btnInfo with a GeoExt Action (button + control)
+				// We wish that by clicking on the map, if btnInfo has been pressed. Info control is activated and window result shown
 																
 				
-				var activate_GFI_control_and_show_Window = function(){
-											//info.activate(); 
+				var activateCtrlInfo = function(){
+											//ctrlInfo.activate(); 
 											Ext.getCmp('ventana_info').show();
 				};
 				
@@ -144,27 +147,27 @@ function initInfoByPoint() {
 				Ext.QuickTips.init();
 				
 				
-				// en lugar de asignarle el control al botón directamente con la propiedad control: info, 
-				// se lo asignamos con el handler, que lo que hace es registrar en el evento clic sobre el mapa
-				// que active el control info y que muestre la ventana con los resultados del template 
+				// Instead of asssigning map control directly to a button with the control property,
+				// we will assign with a handler, that is, it is registered with the click event on the map
+				// that activates the info control and it shows a window with the template results 
 				
-								
-				var btn_infobypoint = new GeoExt.Action({
+											
+				var btnInfo = new GeoExt.Action({
 											//enableToggle: false,
 											layout:'form',
 											bodyStyle:'padding: 10px',
 											tooltip: "Info by Point",
 											iconCls: "btnInfoByPoint",
-											control: info, 
+											control: ctrlInfo, 
 											enableToggle: true, 
 											activateOnEnable: true,
 											handler: function activando() {
-														map.events.register("click", map , activate_GFI_control_and_show_Window);
+														map.events.register("click", map , activateCtrlInfo);
 											}
 				});
 				
 
-				var btn_print_server = new GeoExt.Action({
+				var btnPrintServer = new GeoExt.Action({
 												enableToggle: false,
 												layout:'form',
 												bodyStyle:'padding: 10px',
@@ -173,16 +176,17 @@ function initInfoByPoint() {
 				}); 
 				
 				
-				var btn_print_client = new GeoExt.Action({
+				var btnPrintClient = new GeoExt.Action({
 												enableToggle: false,
 												layout:'form',
 												bodyStyle:'padding: 10px',
 												tooltip: "Print Map",
 												iconCls: "botonPrintClientPDF", 
-												handler: function(){
-																alert('Dime que soy Prueba, please'); 
-																}
+												handler: function(){				
+																	window.open('http://localhost/pegaso-mapviewer/viewer-ui/src/main/webapp/print_good.html'); 
+												}
 				}); 
+		
 		
 				// History Control
 				var ctrlHist = new OpenLayers.Control.NavigationHistory();
@@ -191,25 +195,26 @@ function initInfoByPoint() {
 						
 				// PAN CONTROL //
 				
-				var btn_pan = new GeoExt.Action({
+				btnPan = new GeoExt.Action({
 									map: map,	
-									// Navegation Control tiene más opciones para controlar el drag y el pan
+									// Navegation Control have more options to control drag and pan
 									// http://dev.openlayers.org/docs/files/OpenLayers/Control/Navigation-js.html
-									//http://dev.openlayers.org/docs/files/OpenLayers/Control/DragPan-js.html#OpenLayers.Control.DragPan
+									// http://dev.openlayers.org/docs/files/OpenLayers/Control/DragPan-js.html#OpenLayers.Control.DragPan
 									control: new OpenLayers.Control.DragPan(),
 									enableToggle: true,
 									tooltip: "Pan",
 									iconCls: "botonPan", 
 									layout: 'form',
+									toggleGroup: tooglegroup 
 									//enabled: true, 
-									activateOnEnable: true, 
+									, activateOnEnable: true, 
 									deactivateOnDisable: true
 				});
 				
 				
 				// NAVIGATION PREVIOUS AND NEXT
 				
-				var btn_prev = new GeoExt.Action({
+				var btnPrev = new GeoExt.Action({
 									map: map,	
 									control: ctrlHist.previous, 
 									//enableToggle: true,
@@ -218,7 +223,7 @@ function initInfoByPoint() {
 				});
 				
 				
-				var btn_post = new GeoExt.Action({
+				var btnPost = new GeoExt.Action({
 									map: map,
 									control: ctrlHist.next,
 									tooltip: "Next Navigation", 
@@ -228,26 +233,37 @@ function initInfoByPoint() {
 								
 		
 		
-				var control_zoomIn = new OpenLayers.Control.ZoomBox();
+				var ctrlZoomIn = new OpenLayers.Control.ZoomBox();
 				
 						
-				btn_zoomIn = new GeoExt.Action({
-										control: control_zoomIn, 
+				btnZoomIn = new GeoExt.Action({
+										control: ctrlZoomIn, 
 										map: map,
 										enableToggle: true,
 										layout: 'form',
 										tooltip: "ZoomIn",
 										iconCls: "botonZoomIn", 
+										toggleGroup: tooglegroup, 
 										activateOnEnable: true, 
 										deactivateOnDisable: true
 				});
 				
+				tooglegroup = {
+								    xtype: 'buttongroup'
+								    /*, items: [
+												btn_pan.items[0],
+												btn_zoomIn.items[0]
+										   ]
+									*/	   
+								   }; 
 				
-				var control_zoomOut = new OpenLayers.Control.ZoomBox({out: true});
 				
 				
-				var btn_zoomOut = new GeoExt.Action({
-										control: control_zoomOut, 
+				var ctrlZoomOut = new OpenLayers.Control.ZoomBox({out: true});
+				
+				
+				btnZoomOut = new GeoExt.Action({
+										control: ctrlZoomOut, 
 										map: map,
 										enableToggle: true,
 										layout: 'form',
@@ -258,12 +274,32 @@ function initInfoByPoint() {
 				});
 				
 				
+				var btnZoomFullExtent = new GeoExt.Action({
+												//control: control_zoomOut, 
+												map: map,
+												enableToggle: false,
+												layout: 'form',
+												tooltip: "Full Extent",
+												iconCls: "botonFullExtent",
+												handler: function() {
+															// http://dev.openlayers.org/releases/OpenLayers-2.11/examples/setextent.html
+															//var bounds = new OpenLayers.Bounds(-19567879.238281,-19567879.068281,19567879.238281,19567879.408281);
+															//map.zoomToExtent(bounds);
+															//map.zoomToMaxExtent();
+															var lonlat = new OpenLayers.LonLat(2102825.1807922, 4661687.4971957);
+															map.setCenter(lonlat, 4);
+															//alert("objeto mapa: " + map);
+												}	
+												
+				});
+				
 				
 				//////////////////////////
 				// OVERVIEW MAP CONTROL //
 				//////////////////////////
 						
-				var options_overviewMap = {
+				var optionsOverviewMap = {
+								id: 'overvMap',
 								minRatio: 16, 
 								maxRatio: 64, 
 								maximized: true,
@@ -273,13 +309,29 @@ function initInfoByPoint() {
 								
 							  };
 							  
-				map.addControl(new OpenLayers.Control.OverviewMap(options_overviewMap));
+				map.addControl(new OpenLayers.Control.OverviewMap(optionsOverviewMap));
 				
 					
 				
+				//////////////////////////
+				// SCALE BAR            // TAKE A LOOK AT: http://dev.openlayers.org/addins/scalebar/trunk/examples/scalebar.html
+				////////////////////////// http://trac.osgeo.org/openlayers/attachment/ticket/24/scalebar.patch
 				
+				//var scaleLinea = new OpenLayers.Control.ScaleLine();
 				
+				var scaleBarr = new OpenLayers.Control.ScaleBar({
+											abbreviateLabel: true, // kilometers to KM
+											minWidth: 100, // default is 100 pixels
+											maxWidth: 300 // default is 200 pixels); 
+				}); 
 				
+				//map.addControl(scaleLinea); 
+				map.addControl(scaleBarr); 
+				
+				var panPanelCtrl = new OpenLayers.Control.PanPanel();
+				var zoomPanelCtrl = new OpenLayers.Control.PanZoom();
+				
+				map.addControls([panPanelCtrl,zoomPanelCtrl]);
 				
 				
 				
@@ -372,6 +424,7 @@ function initInfoByPoint() {
 									width: 330,
 									height: 300, 
 									border: false,
+									layout: 'fit',
 									closeAction: "hide", // to avoid problems when closing windod!
 									items: Ext.getCmp('ventanita_id')
 				}); 
@@ -386,15 +439,17 @@ function initInfoByPoint() {
 				
 				var tb = new Ext.Toolbar({ 
 											items: [
-											btn_infobypoint,
+											btnInfo,
 											'-',
-											btn_pan,
-											btn_zoomIn, 
-											btn_zoomOut,
-											btn_prev,
-											btn_post,
-											btn_print_server, 
-											btn_print_client
+											btnPan,
+											btnZoomIn, 
+											//toogleGroup,
+											btnZoomOut,
+											btnPrev,
+											btnPost,
+											btnZoomFullExtent,
+											//btnPrintServer, 
+											btnPrintClient
 											] 
 				});
 			
