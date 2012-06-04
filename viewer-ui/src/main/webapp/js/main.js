@@ -14,7 +14,7 @@ Ext.onReady(function() {
 	
 	initMapPanel();
 	//returnActiveLayersWithClone();
-	returnActiveLayersII();
+	returnActiveLayersII(); // function to return active layers according to visible layers in treePanel
 	initSearchTools();
 	initLeftTabs();
 	initInfoByPoint(); 
