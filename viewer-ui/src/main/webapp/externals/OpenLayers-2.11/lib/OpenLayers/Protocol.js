@@ -229,11 +229,20 @@ OpenLayers.Protocol.Response = OpenLayers.Class({
     last: true,
 
     /**
-     * Property: features
-     * {Array({<OpenLayers.Feature.Vector>})} or {<OpenLayers.Feature.Vector>}
-     * The features returned in the response by the server.
-     */
+    * Property: features
+    * {Array({<OpenLayers.Feature.Vector>})} or {<OpenLayers.Feature.Vector>}
+    * The features returned in the response by the server. Depending on the
+    * protocol's read payload, either features or data will be populated.
+    */
     features: null,
+
+        /**
+    * Property: data
+    * {Object}
+    * The data returned in the response by the server. Depending on the
+    * protocol's read payload, either features or data will be populated.
+    */
+    data: null,
 
     /**
      * Property: reqFeatures
