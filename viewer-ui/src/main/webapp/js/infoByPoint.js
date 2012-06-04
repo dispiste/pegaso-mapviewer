@@ -11,7 +11,7 @@
 var msOutput; 
 //var SALIDORRA, mas, menos; 
 var myTmpl, myTmplNUTS, myTmplCLC, myTmplCNTR, myTmplNoResults; 
-var btnZoomIn, btnZoomOut, btnPan, tooglegroup; 
+//var btnZoomIn, btnZoomOut, btnPan, btnInfo, tooglegroup; 
 // Selected Layer from treePanel. Only info-by-point control for one layer 
 // It returns a string 
 //var selected_layer = Ext.getCmp('layersTab').selModel.selNode.layer.params.LAYERS; 
@@ -154,6 +154,7 @@ function initInfoByPoint() {
 											
 				var btnInfo = new GeoExt.Action({
 											//enableToggle: false,
+											id: 'cacota',
 											layout:'form',
 											bodyStyle:'padding: 10px',
 											tooltip: "Info by Point",
@@ -161,12 +162,17 @@ function initInfoByPoint() {
 											control: ctrlInfo, 
 											enableToggle: true, 
 											activateOnEnable: true,
-											handler: function activando() {
-														map.events.register("click", map , activateCtrlInfo);
+											//toggleGroup: 'groupToggleButtons', 
+											handler: function(btn){ // we manage the "pressed" property for button element associated to action
+														if (btn.pressed) {
+															map.events.register("click", map , activateCtrlInfo);
+														} else {
+															map.events.unregister("click", map , activateCtrlInfo);
+														}
 											}
 				});
 				
-
+			
 				var btnPrintServer = new GeoExt.Action({
 												enableToggle: false,
 												layout:'form',
@@ -195,7 +201,7 @@ function initInfoByPoint() {
 						
 				// PAN CONTROL //
 				
-				btnPan = new GeoExt.Action({
+				var btnPan = new GeoExt.Action({
 									map: map,	
 									// Navegation Control have more options to control drag and pan
 									// http://dev.openlayers.org/docs/files/OpenLayers/Control/Navigation-js.html
@@ -205,9 +211,10 @@ function initInfoByPoint() {
 									tooltip: "Pan",
 									iconCls: "botonPan", 
 									layout: 'form',
-									toggleGroup: tooglegroup 
+									toggleGroup: 'groupToggleButtons', 
+									pressed : true,
 									//enabled: true, 
-									, activateOnEnable: true, 
+									activateOnEnable: true, 
 									deactivateOnDisable: true
 				});
 				
@@ -236,39 +243,31 @@ function initInfoByPoint() {
 				var ctrlZoomIn = new OpenLayers.Control.ZoomBox();
 				
 						
-				btnZoomIn = new GeoExt.Action({
+				var btnZoomIn = new GeoExt.Action({
 										control: ctrlZoomIn, 
 										map: map,
 										enableToggle: true,
 										layout: 'form',
 										tooltip: "ZoomIn",
 										iconCls: "botonZoomIn", 
-										toggleGroup: tooglegroup, 
+										toggleGroup: 'groupToggleButtons', 
 										activateOnEnable: true, 
 										deactivateOnDisable: true
 				});
 				
-				tooglegroup = {
-								    xtype: 'buttongroup'
-								    /*, items: [
-												btn_pan.items[0],
-												btn_zoomIn.items[0]
-										   ]
-									*/	   
-								   }; 
-				
-				
+								
 				
 				var ctrlZoomOut = new OpenLayers.Control.ZoomBox({out: true});
 				
 				
-				btnZoomOut = new GeoExt.Action({
+				var btnZoomOut = new GeoExt.Action({
 										control: ctrlZoomOut, 
 										map: map,
 										enableToggle: true,
 										layout: 'form',
 										tooltip: "ZoomOut",
 										iconCls: "botonZoomOut", 
+										toggleGroup: 'groupToggleButtons'
 										//activateOnEnable: true, 
 										//deactivateOnDisable: true
 				});
