@@ -196,6 +196,7 @@
                 "OpenLayers/Control/Permalink.js",
                 "OpenLayers/Control/Scale.js",
                 "OpenLayers/Control/ScaleLine.js",
+				"OpenLayers/Control/ScaleBar.js",
                 "OpenLayers/Control/Snapping.js",
                 "OpenLayers/Control/Split.js",
                 "OpenLayers/Control/LayerSwitcher.js",

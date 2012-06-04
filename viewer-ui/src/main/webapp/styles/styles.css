@@ -99,3 +99,8 @@ div.mainPegasoLogo {
   height:16 px !important;
   width: 16 px !important;
 }
+.botonFullExtent{
+  background-image:url(../img/icon_zoomfull.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
