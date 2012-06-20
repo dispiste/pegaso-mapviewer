@@ -10,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="externals/ext-3.4.0/resources/css/pegaso.css" />
 		<link rel="stylesheet" type="text/css" href="externals/GeoExt-1.10/resources/css/popup.css">
 		<link rel="stylesheet" href="styles/css_scalebar/scalebar-thin.css" type="text/css"> 
+		<link rel="stylesheet" href="styles/styles-loading.css" type="text/css"> 
 		<link rel="stylesheet" type="text/css" href="styles/styles.css" >
 		<script src="http://maps.google.com/maps/api/js?v=3.6&sensor=false"></script> 
         <script src="externals/OpenLayers-2.11/OpenLayers.js"></script> 
@@ -18,6 +19,7 @@
         <script type="text/javascript" src="js/map.js"></script>
         <script type="text/javascript" src="js/leftTabs.js"></script>
         <script type="text/javascript" src="js/searchTools.js"></script>
+		<script type="text/javascript" src="js/featuredLayers.js"></script>
 		<script type="text/javascript" src="js/infoByPoint.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
 		<script src="js/scaleBar.js"></script>
@@ -37,32 +39,63 @@
 				padding-left: 80px;
 			}
 			
+			#buttonFeaturedLayers2 {
+				text-align: right;
+			}
+			
+			#kk {	
+				text-align: left;
+			}
+			
 		</style> 
+		
+		
+		<script type="text/javascript">
+		
+		// loading mask when loading web app.
+		
+		Ext.onReady(function() {
+		
+				Ext.get('loading-mask').fadeIn();
+				
+				setTimeout(function(){
+						Ext.get('loading').remove();
+						Ext.get('loading-mask').fadeOut({remove:true});
+						}, 1000);
+		});
+		
+		</script>
     </head>
     <body>
-    	<!--
-    		generated dynamically from Javascript code
-    		<div id="west-tab-panel">
-    			<div id="layersTab" class="x-hide-display">
-    				<p>Hi. I'm the layer tree panel.</p>
-    			</div>
-    			<div id="legendTab" class="x-hide-display">
-    				<p>Hi. I'm the legend panel.</p>
-    			</div>
-    		</div>
-    	-->
+    	
+		<!-- div to wrapp mask icon -->
+		<div id="loading-mask">
+		</div>
+		<div id="loading">
+			<div class="loading-indicator">
+				Loading...
+			</div>
+		</div>
+		
+		<!-- header container -->
     	<div id="northDiv" class="x-hide-display">
-    		<div class="mainPegasoLogo">
+			
+			<div class="mainPegasoLogo"> 
     			<a class="mainPegasoLogo" href="http://www.pegasoproject.eu">
     				<img class="mainPegasoLogo" alt="Pegaso logo" src="img/pegaso_logo.png" />
     			</a>
     		</div>
+		
+			
     		<div id="pegasoBanner">
 				<p id="LocSch"> Search by Location </p> 
 				<div id="searchtool"> 	
 				</div>
+				<div id="buttonFeaturedLayers">
+				</div>
+				
 			</div>
-    	</div>
+    	 </div> 
     </body>
 </html>
 </html>
