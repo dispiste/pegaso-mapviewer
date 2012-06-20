@@ -13,11 +13,12 @@ Ext.onReady(function() {
 
 	
 	initMapPanel();
-	//returnActiveLayersWithClone();
 	returnActiveLayersII(); // function to return active layers according to visible layers in treePanel
 	initSearchTools();
+	initFeaturedLayers();
 	initLeftTabs();
 	initInfoByPoint(); 
+	
 	
 	
 	
@@ -29,9 +30,9 @@ Ext.onReady(function() {
 			region: "north",
 			contentEl: "northDiv",
 			height: 80
-		},
-		mapPanel,
-		tabPanel
+				},
+			mapPanel,
+			tabPanel
 		]
 	});
 });
