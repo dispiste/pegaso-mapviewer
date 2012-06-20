@@ -135,6 +135,7 @@ div.mainPegasoLogo {
     padding: 5px;
 }
 
+#cswResultWindow .x-window-body { background:#fff; }
 /**
  *  CSS buttons (used by templates where ExtJS components are not allowed).
  *  This is used for instance by the CSW client.

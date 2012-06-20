@@ -43,27 +43,20 @@ UAB.csw.CSWSearchField  = Ext.extend(Ext.form.TriggerField, {
 	 * An Ext.XTemplate object, which will be used to format the query results (Optional).
 	 */
 	template: null,
+	fields: ['title', 'abstract', 'URI', 'wmsurl', 'wmslayers', 'identifier', 'source'],
     /**
      * Queries the configured CSW server and shows the results in a Window.
      *
      * @param searchString {string} The query will match any occurrence of this string on the CSW records.
      */
 	cswSearch: function(searchString) {
-		searchString = searchString || "";
-		var cswSearchStr = "AnyText like '%"+searchString+"%' And protocol like 'OGC:WMS%'";
-		
-		var query = {
-			ElementSetName: {
-				value: "full",
-				typeNames: "csw:Record"
-			},
-			Constraint: {
-				version: '1.1.0',
-				CqlText: {
-					value: cswSearchStr
-				}
+		var query = this.getQueryObject(searchString);
+		var resetScroll = function() {
+			var dataView = Ext.getCmp('cswResultView');
+			if (dataView && dataView.el) {
+				dataView.el.dom.scrollTop = 0;
 			}
-		}
+		};
 		
 		if (this.resultWindow) {
 			var dataView = this.resultWindow.items.items[0];
@@ -72,7 +65,8 @@ UAB.csw.CSWSearchField  = Ext.extend(Ext.form.TriggerField, {
 			store.load();
 			dataView.refresh();
 			// LoadMask: to show the "Loading..." message while data is loading
-			var myMask = new Ext.LoadMask(Ext.get('cswResultView'), {msg:"Loading...", store: store});
+			var myMask = new Ext.LoadMask('cswResultView', {msg:"Loading...", store: store});
+			resetScroll();
 			myMask.show();
 			this.resultWindow.show(this);
 			
@@ -86,7 +80,7 @@ UAB.csw.CSWSearchField  = Ext.extend(Ext.form.TriggerField, {
 				}),
 				reader: new UAB.csw.CustomCSWRecordsReader({
 					format: new OpenLayers.Format.CSWGetRecords(),
-					fields: ['title', 'abstract', 'URI', 'wmsurl', 'wmslayers', 'identifier', 'source'],
+					fields: this.fields,
 					totalProperty: 'numberOfRecordsMatched'
 				}),
 				paramNames: {
@@ -110,6 +104,7 @@ UAB.csw.CSWSearchField  = Ext.extend(Ext.form.TriggerField, {
 				console.log('store loaded');
 			}});
 			this.resultWindow = new Ext.Window({
+				id: 'cswResultWindow',
 				title: 'Search results',
 				layout:'fit',
 				width:600,
@@ -117,7 +112,7 @@ UAB.csw.CSWSearchField  = Ext.extend(Ext.form.TriggerField, {
 				closeAction:'hide',
 				plain: true,
 				bbar: pagingToolbar,
-				items:  new Ext.DataView({
+				items: new Ext.DataView({
 					id: 'cswResultView',
 					store: store,
 					tpl: this.template,
@@ -128,9 +123,14 @@ UAB.csw.CSWSearchField  = Ext.extend(Ext.form.TriggerField, {
 					emptyText: 'No results'
 				})
 			});
+			// necessary as paging does not reset scroll by default
+			pagingToolbar.on("beforeChange", function(pagingToolbar){
+				resetScroll();
+			});
+
 			this.resultWindow.show(this);
 			// LoadMask: to show the "Loading..." message while data is loading
-			var myMask = new Ext.LoadMask(Ext.get('cswResultView'), {msg:"Loading...", store: store});
+			var myMask = new Ext.LoadMask('cswResultView', {msg:"Loading...", store: store});
 			myMask.show();
 		}
 	},
@@ -154,6 +154,29 @@ UAB.csw.CSWSearchField  = Ext.extend(Ext.form.TriggerField, {
 	},
 	onTriggerClick: function(eventObject) {
 		this.cswSearch(this.getValue());
+	},
+	getQueryObject:function(searchString) {
+		if (searchString && searchString!= "") {
+			searchString = "%"+searchString+"%";
+		}
+		else {
+			searchString = "%";
+		}
+		var cswSearchStr = "AnyText like '"+searchString+"' And protocol like 'OGC:WMS%'";
+		
+		var query = {
+			ElementSetName: {
+				value: "full",
+				typeNames: "csw:Record"
+			},
+			Constraint: {
+				version: '1.1.0',
+				CqlText: {
+					value: cswSearchStr
+				}
+			}
+		}
+		return query;
 	}
 
 });
