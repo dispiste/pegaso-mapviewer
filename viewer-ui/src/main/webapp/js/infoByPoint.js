@@ -9,18 +9,20 @@
 
 //var printProvider, printExtent; // saved in case of server printing
 var msOutput; 
-//var SALIDORRA, mas, menos; 
-var myTmpl, myTmplNUTS, myTmplCLC, myTmplCNTR, myTmplNoResults; 
-//var btnZoomIn, btnZoomOut, btnPan, btnInfo, tooglegroup; 
-// Selected Layer from treePanel. Only info-by-point control for one layer 
+
+var myTmpl, myTmplNUTS, myTmplCLC, myTmplCNTR, myTmplNoResults, myTmplNoSelected, myTmplNUTS2010, myTmplCNTR2010, myTmplNATURA, myTmplNUTS2010L0, myTmplNUTS2010L1,myTmplNUTS2010L2, myTmplNUTS2010L3, myTmplGLOBCORINE; 
+
+var link; // variable to store url link to state of the map (base and overlay layers, zoom, center and so on)
+// Selected Layer from treePanel. Only info-by-point control for one layer, NOT multiple layers
 // It returns a string 
 //var selected_layer = Ext.getCmp('layersTab').selModel.selNode.layer.params.LAYERS; 
 //var selected_layer = "CORINE_CLC90_100m";   
-//var arrGFILayers; 
 
-
+// array layer fromGetFeatureInfo response
 var arrayGFI; 
 
+// coordinates from pixel
+var olonlat;
 		
 // Proxy para OpenLayers. It seems to be necessary
 OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
@@ -57,20 +59,54 @@ function initInfoByPoint() {
 									case "CNTR_BN_03M_2006":
 											myTmpl = myTmplCNTR;
 											break; 
+											
 									case "NUTS_BN_03M_2006":
 											myTmpl = myTmplNUTS;
 											break; 		
+											
 									case "CORINE_CLC90_100m":
 									case "CORINE_CLC00_100m":
 									case "CORINE_CLC06_100m":
 											myTmpl = myTmplCLC;
+											break;
+											
+									case "GLOBCORINE_2005":
+									case "GLOBCORINE_2009":
+											myTmpl = myTmplGLOBCORINE;
 											break; 
-									case "":
-											myTmpl = myTmplNoResults;
+											
+									case "NATURA2000":
+											myTmpl = myTmplNATURA;
 											break; 
+											
+									case "CNTR_RG_03M_2010":
+											myTmpl = myTmplCNTR2010;
+											break; 	
+											
+									case "NUTS_RG_03M_2010":
+											myTmpl = myTmplNUTS2010;
+											break; 
+											
+									case "NUTS_RG_03M_2010_L0":
+											myTmpl = myTmplNUTS2010L0;
+											break; 	
+											
+									case "NUTS_RG_03M_2010_L1":
+											myTmpl = myTmplNUTS2010L1;
+											break; 	
+											
+									case "NUTS_RG_03M_2010_L2":
+											myTmpl = myTmplNUTS2010L2;
+											break; 	
+											
+									case "NUTS_RG_03M_2010_L3":
+											myTmpl = myTmplNUTS2010L3;
+											break; 												
+											
 									default: 
-											myTmpl = myTmplNoResults; 
+											myTmpl = myTmplNoSelected; 
 											break; 
+											
 											
 									}
 				};
@@ -110,9 +146,10 @@ function initInfoByPoint() {
 										var msOutput = msParserFormat.read(msGMLOutput);
 										var arrGFILayers = reductionArray(msOutput, selected_layer); 			
 										assignTemplate(selected_layer); 							
-										/*if (arrGFILayers.length ==0){
-											Ext.get('ventanita_id').createChild('<div>There is no result</div>');
-										}*/
+										if (arrGFILayers.length ==0){
+											//Ext.get('ventanita_id').createChild('<div>There is no result</div>');
+											myTmpl=myTmplNoResults;
+										}
 										myTmpl.overwrite(Ext.getCmp('ventanita_id').body, arrGFILayers); 	
 										// console.log(e.xy);        // POINT in PIXELS
 										// console.log(e.features);  // ARRAY
@@ -123,21 +160,19 @@ function initInfoByPoint() {
 				
 				
 				map.addControl(ctrlInfo);
-				
-				// control is activated by a pertinent button
-				
-				
-				
-				// we assign getfeatureinfo control to btnInfo with a GeoExt Action (button + control)
-				// We wish that by clicking on the map, if btnInfo has been pressed. Info control is activated and window result shown
-																
-				
+								
 				var activateCtrlInfo = function(){
 											//ctrlInfo.activate(); 
 											Ext.getCmp('ventana_info').show();
 				};
 				
 				
+				map.events.register("click", map , function(e){
+										
+										var opx = map.getLayerPxFromViewPortPx(e.xy) ;
+										// getLonLat from Map (if base map is mercator, units of LonLat will be meters (EPSG:900913) and not decimal degress (EPSG:4326))
+										olonlat = map.getLonLatFromPixel(e.xy) ; 
+				});
 				
 
 
@@ -147,27 +182,34 @@ function initInfoByPoint() {
 				Ext.QuickTips.init();
 				
 				
-				// Instead of asssigning map control directly to a button with the control property,
-				// we will assign with a handler, that is, it is registered with the click event on the map
-				// that activates the info control and it shows a window with the template results 
 				
 											
-				var btnInfo = new GeoExt.Action({
+				var btnInfoExt = new Ext.Action({
 											//enableToggle: false,
 											id: 'cacota',
 											layout:'form',
 											bodyStyle:'padding: 10px',
 											tooltip: "Info by Point",
 											iconCls: "btnInfoByPoint",
-											control: ctrlInfo, 
 											enableToggle: true, 
-											activateOnEnable: true,
-											//toggleGroup: 'groupToggleButtons', 
+											toggleGroup: 'groupToggleButtons',
 											handler: function(btn){ // we manage the "pressed" property for button element associated to action
 														if (btn.pressed) {
+															
 															map.events.register("click", map , activateCtrlInfo);
+															tree.getSelectionModel().on("selectionchange", function(selectionModel, node) {
+															
+																				ctrlInfo.activate();
+															});
+															
 														} else {
+																														
+															Ext.getCmp('ventana_info').hide();
+															
+															ctrlInfo.deactivate();
+															
 															map.events.unregister("click", map , activateCtrlInfo);
+															
 														}
 											}
 				});
@@ -198,7 +240,16 @@ function initInfoByPoint() {
 				var ctrlHist = new OpenLayers.Control.NavigationHistory();
 				map.addControl(ctrlHist);
 
-						
+
+				// Navigation Control
+				// Enable zoom by using mouse wheel 
+				var ctrlWheel = new OpenLayers.Control.Navigation(
+									{
+										zoomWheelEnabled: true
+									}
+				); 
+				map.addControl(ctrlWheel);
+								
 				// PAN CONTROL //
 				
 				var btnPan = new GeoExt.Action({
@@ -215,7 +266,15 @@ function initInfoByPoint() {
 									pressed : true,
 									//enabled: true, 
 									activateOnEnable: true, 
-									deactivateOnDisable: true
+									deactivateOnDisable: true,
+									handler: function(){
+													map.events.unregister("click", map , activateCtrlInfo);
+													if(Ext.getCmp('ventana_info')){
+														Ext.getCmp('ventana_info').hide();
+														
+													}
+													
+									}
 				});
 				
 				
@@ -252,7 +311,15 @@ function initInfoByPoint() {
 										iconCls: "botonZoomIn", 
 										toggleGroup: 'groupToggleButtons', 
 										activateOnEnable: true, 
-										deactivateOnDisable: true
+										deactivateOnDisable: true,
+										handler: function(){
+													map.events.unregister("click", map , activateCtrlInfo);
+													if(Ext.getCmp('ventana_info')){
+														Ext.getCmp('ventana_info').hide();
+														
+													}
+													
+										}	
 				});
 				
 								
@@ -267,9 +334,15 @@ function initInfoByPoint() {
 										layout: 'form',
 										tooltip: "ZoomOut",
 										iconCls: "botonZoomOut", 
-										toggleGroup: 'groupToggleButtons'
-										//activateOnEnable: true, 
-										//deactivateOnDisable: true
+										toggleGroup: 'groupToggleButtons',
+										handler: function(){
+													map.events.unregister("click", map , activateCtrlInfo);
+													if(Ext.getCmp('ventana_info')){
+														Ext.getCmp('ventana_info').hide();
+														
+													}
+													
+										}	
 				});
 				
 				
@@ -290,6 +363,31 @@ function initInfoByPoint() {
 															//alert("objeto mapa: " + map);
 												}	
 												
+				});
+				
+				
+				
+				
+				var panelPermalink = new Ext.Panel({	
+							//renderTo: Ext.getCmp("ventana"),
+							height: 300,
+							width: 300,
+							title: "Permalink",
+							frame: true,
+							id: "permalinkPanel"
+				});
+				
+				
+				
+				
+				
+				var btnPermalink = new GeoExt.Action({
+									tooltip: "Link Map", 
+									iconCls: "botonPermalink",
+									handler: function() {
+																			
+										Ext.getCmp("ventana").show();
+									}
 				});
 				
 				
@@ -349,14 +447,36 @@ function initInfoByPoint() {
 													'<b> Class: </b> {value_0} <br />', 
 													'<b> Description: </b> {class} <br />', 
 											'</tpl>', 
+									'</div>',
+								'</tpl>',
+								'<div>',
+								'<div>',
+										'Take a look at <a href="http://sia.eionet.europa.eu/CLC2000/classes" target="_blank">Corine classes</a> for more details! <br />',
+								'</div>'								
+				);
+				
+				myTmplCLC.compile();
+				
+				
+				
+				myTmplGLOBCORINE = new Ext.XTemplate(
+								'<tpl for=".">',
+									'<div style="background-color: #FFE9E9; margin: 10px; width:400px;">',
+											'<b> Layer: </b> {type} <br />',
+											'<tpl for="attributes">', 
+													'<b> Coordinates X-Y: </b> {olonlat.lon}, {olonlat.lat} <br />', 
+													'<b> Class: </b> {value_0} <br />', 
+													'<b> Description: </b> {class} <br />', 
+													
+											'</tpl>', 
 											'Take a look at <a href="http://sia.eionet.europa.eu/CLC2000/classes" target="_blank">Corine classes</a> for more details! <br />',
 									'</div>',
 								'</tpl>'														
 				);
 				
+				myTmplGLOBCORINE.compile();
 				
-								
-				myTmplCLC.compile();
+				
 				
 				myTmplNUTS = new Ext.XTemplate(
 								'<tpl for=".">',
@@ -400,6 +520,156 @@ function initInfoByPoint() {
 				myTmplNoResults.compile();
 				
 				
+				myTmplNATURA = new Ext.XTemplate(
+								'<tpl>',
+									'<div style="background-color: #CAE8EB; margin: 10px; width: 300px;">',
+										'<b> Coordinates X-Y: </b> {olonlat.lon},{olonlat.lat} <br />',
+											'<tpl for=".">',
+												'<div style=" margin: 10px; width: 300px;">',
+														'<tpl for="attributes">',  
+															// recorre los atributos del XML devuelto
+															'<b> CODE: </b> {SITECODE} <br />', 
+															'<b> NAME: </b> {SITENAME} <br />',
+															'<b> RELEASE: </b> {RELEASE_DA} <br />', 
+															'<b> TYPE: </b> {SITETYPE} <br />',
+														'</tpl>', 
+												'</div>',
+											'</tpl>',
+									'</div>',	
+								'</tpl>'
+				);
+				
+				myTmplNATURA.compile();
+				
+				
+				
+				myTmplCNTR2010 = new Ext.XTemplate(
+								'<tpl for=".">',
+									'<div style="background-color: #CAE8EB; margin: 10px; width: 300px;">',
+											'<b> Layer: </b> {type} <br />',
+											'<tpl for="attributes">',  
+												'<b> CODE: </b> {CNTR_ID} <br />', 
+												'<b> NAME: </b> {NAME_ENGL} <br />',
+												'<b> ISOCODE: </b> {ISO3_CODE} <br />', 
+												'<b> SVRG_UN: </b> {SURG_UN} <br />',
+												'<b> CAPT: </b> {CAPT} <br />', 
+												'<b> SVRG_UN: </b> {SVRG_UN} <br />',
+												'<b> CENT_MERI: </b> {CENT_MERI} <br />', 
+												'<b> LAT_ORIG: </b> {LAT_ORIG} <br />',
+												'<b> EU_TERR: </b> {EU_TERR} <br />', 
+												'<b> EFTA_TERR: </b> {EFTA_TERR} <br />',
+												'<b> CC_TERR: </b> {CC_TERR} <br />',
+											'</tpl>', 
+									'</div>',
+								'</tpl>'
+				);
+				
+				myTmplCNTR2010.compile();
+				
+				
+				myTmplNUTS2010 = new Ext.XTemplate(
+								'<tpl for=".">',
+									'<div style="background-color: #CAE8EB; margin: 10px; width: 300px;">',
+											'<b> Layer: </b> {type} <br />',
+											'<tpl for="attributes">',  
+												'<b> STATE_LEVEL: </b> {STAT_LEVL} <br />', 
+												'<b> NUTSID: </b> {NUTS_ID} <br />',
+												'<b> NAME: </b> {NAME_LATN} <br />', 
+											'</tpl>', 
+									'</div>',
+								'</tpl>'
+				);
+				
+				myTmplNUTS2010.compile();
+				
+				
+				myTmplNUTS2010L0 = new Ext.XTemplate(
+								'<tpl for=".">',
+									'<div style="background-color: #CAE8EB; margin: 10px; width: 300px;">',
+											'<b> Layer: </b> {type} <br />',
+											'<b> Coordinates X-Y: </b> {olonlat.lon}, {olonlat.lat} <br />', 
+											'<tpl for="attributes">',  
+												'<b> STATE_LEVEL: </b> {STAT_LEVL_} <br />', 
+												'<b> NUTSID: </b> {NUTS_ID} <br />',
+												'<b> NAME: </b> {NAME_ASCI} <br />', 
+											'</tpl>', 
+									'</div>',
+								'</tpl>'
+				);
+				
+				myTmplNUTS2010L0.compile();
+				
+				myTmplNUTS2010L1 = new Ext.XTemplate(
+								'<tpl for=".">',
+									'<div style="background-color: #CAE8EB; margin: 10px; width: 300px;">',
+											'<b> Layer: </b> {type} <br />',
+											'<b> Coordinates X-Y: </b> {olonlat.lon}, {olonlat.lat} <br />', 
+											'<tpl for="attributes">',  
+												'<b> STATE_LEVEL: </b> {STAT_LEVL_} <br />', 
+												'<b> NUTSID: </b> {NUTS_ID} <br />',
+												'<b> NAME: </b> {NAME_ASCI} <br />', 
+											'</tpl>', 
+									'</div>',
+								'</tpl>'
+				);
+				
+				myTmplNUTS2010L1.compile();
+				
+				myTmplNUTS2010L2 = new Ext.XTemplate(
+								'<tpl for=".">',
+									'<div style="background-color: #CAE8EB; margin: 10px; width: 300px;">',
+											'<b> Layer: </b> {type} <br />',
+											'<b> Coordinates X-Y: </b> {olonlat.lon}, {olonlat.lat} <br />', 
+											'<tpl for="attributes">',  
+												'<b> STATE_LEVEL: </b> {STAT_LEVL_} <br />', 
+												'<b> NUTSID: </b> {NUTS_ID} <br />',
+												'<b> NAME: </b> {NAME_ASCI} <br />', 
+											'</tpl>', 
+									'</div>',
+								'</tpl>'
+				);
+				
+				myTmplNUTS2010L2.compile();
+				
+				myTmplNUTS2010L3 = new Ext.XTemplate(
+								'<tpl for=".">',
+									'<div style="background-color: #CAE8EB; margin: 10px; width: 300px;">',
+											'<b> Layer: </b> {type} <br />',
+											'<b> Coordinates X-Y: </b> {olonlat.lon}, {olonlat.lat} <br />', 
+											'<tpl for="attributes">',  
+												'<b> STATE_LEVEL: </b> {STAT_LEVL_} <br />', 
+												'<b> NUTSID: </b> {NUTS_ID} <br />',
+												'<b> NAME: </b> {NAME_ASCI} <br />', 
+											'</tpl>', 
+									'</div>',
+								'</tpl>'
+				);
+				
+				myTmplNUTS2010L3.compile();
+				
+				myTmplNoResults = new Ext.XTemplate(
+										'<tpl>',
+											'<div style="width:300px, height: 100px;">',
+												' NO RESULTS FOR SELECTED LAYER',
+											'</div>',
+										'</tpl>'
+				);
+				
+				myTmplNoResults.compile();
+				
+				
+				myTmplNoSelected = new Ext.XTemplate(
+										'<tpl>',
+											'<div>',
+												' There is no selected layer ',
+											'</div>',
+										'</tpl>'
+				);
+				
+				myTmplNoSelected.compile();
+				
+				
+				
 				// *****************************************
 				// END TEMPLATES
 				// *****************************************			
@@ -409,20 +679,20 @@ function initInfoByPoint() {
 				
 				var panel_GFI = new Ext.Panel({
 							id: 'ventanita_id',
-							title: 'WMS GetFeatureInfo',
-							width: 330,
+							autoHeight: true, // panel height is adjusted to contents
 							html: '<p><i>WMSGetFeatureInfo results</i></p>',	
 							layout:  'fit', 
-							closable: true
+							closable: true, 
+							resizeable: false
 						});
 				
 								
 				window_GFI = new Ext.Window({
 									title: 'WMS GetFeatureInfo',
 									id: 'ventana_info',
-									width: 330,
-									height: 300, 
+									width: 340,
 									border: false,
+									resizeable: false,
 									layout: 'fit',
 									closeAction: "hide", // to avoid problems when closing windod!
 									items: Ext.getCmp('ventanita_id')
@@ -438,17 +708,19 @@ function initInfoByPoint() {
 				
 				var tb = new Ext.Toolbar({ 
 											items: [
-											btnInfo,
-											'-',
+											btnInfoExt,
 											btnPan,
 											btnZoomIn, 
-											//toogleGroup,
 											btnZoomOut,
+											'-',
 											btnPrev,
 											btnPost,
 											btnZoomFullExtent,
 											//btnPrintServer, 
-											btnPrintClient
+											btnPrintClient,
+											'->',
+											btnPermalink,
+											sampleButton
 											] 
 				});
 			

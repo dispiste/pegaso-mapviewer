@@ -118,6 +118,11 @@ div.mainPegasoLogo {
   height:16 px !important;
   width: 16 px !important;
 }
+.botonPermalink{
+background-image:url(../img/plus.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
 
 /**
  *     CSW client styles
