@@ -34,8 +34,8 @@ function initSearchTools() {
        map: mapPanel.map,
 	  //id: 'caca',
        zoom: 8,
-	   width: 400,
-       renderTo: 'searchtool',
+	   //width: 400,
+       //renderTo: 'searchtool',
 	   // vector layer is referred to one that contains marker to show wished location 
 	   layer: locationLayer,
        displayField: "formatted_address",
@@ -70,60 +70,48 @@ function initSearchTools() {
                 }))({api: {read: true}})
             })
     });
+
+	var cswconfig = {
+		map: mapPanel.map,
+		queryUrl: "http://pegasosdi.uab.es/catalog/srv/en/csw"
+	} 
+	var loadLayers = new UAB.csw.CSWSearchField(cswconfig);
+	// TODO: loadByProvider has not been implemented yet
+	var loadByProvider = new UAB.csw.CSWSearchField(cswconfig);
 	
-	
-	mapPanel.map.addControl(new OpenLayers.Control.LayerSwitcher()); 
-	
-	
-	/*
-	
-    mapPanel = new GeoExt.MapPanel({
-        renderTo: "mappanelito",
-        height: 400,
-        width: 500,
-        layers: [
-            new OpenLayers.Layer.Google("Google", {numZoomLevels: 20}),
-            locationLayer
-        ],
-        zoom: 1, 
-        tbar: [{
-			id: 'caca', 
-            xtype: "gx_geocodercombo", // instanciamos un combo geocoder de GeoExt que nos permite usar la API  de Geocoding de Google !!!!
-            width: 250,
-            layer: locationLayer,
-            displayField: "formatted_address",
-            store: new Ext.data.JsonStore({
-                root: null,
-                fields: [
-                    "formatted_address",
-                    {name: "lonlat", convert: function(v, rec) {
-                        var latLng = rec.geometry.location;
-                        return [latLng.lng(), latLng.lat()];
-                    }},
-                    {name: "bounds", convert: function(v, rec) {
-                        var ne = rec.geometry.viewport.getNorthEast(),
-                            sw = rec.geometry.viewport.getSouthWest();
-                        return [sw.lng(), sw.lat(), ne.lng(), ne.lat()];
-                    }}
-                ],
-                proxy: new (Ext.extend(Ext.data.DataProxy, {
-                    doRequest: function(action, rs, params, reader, callback, scope, options) {
-                        // To restrict the search to a bounding box, change the
-                        // 1st argument of the geocoder.geocode call below to
-                        // something like
-                        // {address: params.q, bounds: new google.maps.LatLngBounds(
-                        //     new google.maps.LatLng(47, 15),
-                        //     new google.maps.LatLng(49, 17)
-                        // )}
-                        geocoder.geocode({address: params.q}, function(results, status) {
-                            var readerResult = reader.readRecords(results);
-                            callback.call(scope, readerResult, options, !!readerResult);                        
-                        });
-                    }
-                }))({api: {read: true}})
-            })
+	var searchCatalog = new Ext.TabPanel({
+	    id: 'searchPanel',
+	    width: 400,
+	    height: 60,
+        autoTabs:true,
+        activeTab:0,
+        plain: true,
+        layoutOnTabChange: true,
+        //deferredRender:false,
+        border:false,
+        items: [{
+        	title: "Search places",
+        	items: comboGeo,
+        	layout: 'fit',
+        	xtype: 'panel'
+        },
+        {
+        	title: "Load Layers",
+        	xtype: 'panel', 
+        	items: loadLayers,
+        	layout: 'fit'
+        },
+        {
+        	title: "Load by provider",
+        	items: loadByProvider,
+        	layout: 'fit',
+        	xtype: 'panel'
         }]
     });
 	
-	*/	
+	var northToolsPanel = new Ext.Container({
+		renderTo: 'northTools',
+		layout: 'hbox',
+		items: [searchCatalog]
+	});
 }

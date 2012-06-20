@@ -148,11 +148,6 @@ OpenLayers.Layer.Google.v3 = {
         var cache = OpenLayers.Layer.Google.cache[this.map.id];
         var container = this.map.viewPortDiv;
         
-		// move the Map Data popup to the container, if any 
- 	     while (div.lastChild.style.display == "none") { 
- 	           container.appendChild(div.lastChild); 
-		}
-			
         // move the ToS and branding stuff up to the container div
         // depends on value of zIndex, which is not robust
 
@@ -227,8 +222,7 @@ OpenLayers.Layer.Google.v3 = {
             }
             var container = this.mapObject.getDiv();
             if (visible === true) {
-                this.mapObject.setMapTypeId(this.type);   
-				container.style.display = ""; 				
+                this.mapObject.setMapTypeId(type);                
                 container.style.left = "";
                 if (cache.termsOfUse && cache.termsOfUse.style) {
                     cache.termsOfUse.style.left = "";
@@ -238,7 +232,6 @@ OpenLayers.Layer.Google.v3 = {
                 cache.displayed = this.id;
             } else {
                 delete cache.displayed;
-				container.style.display = "none";
                 container.style.left = "-9999px";
                 if (cache.termsOfUse && cache.termsOfUse.style) {
                     cache.termsOfUse.style.display = "none";

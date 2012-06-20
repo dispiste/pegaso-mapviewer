@@ -1,10 +1,134 @@
-(function(){if(!window.google||!google.gears){var a=null;if("undefined"!=typeof GearsFactory)a=new GearsFactory;else try{a=new ActiveXObject("Gears.Factory"),-1!=a.getBuildInfo().indexOf("ie_mobile")&&a.privateSetGlobalObject(this)}catch(b){"undefined"!=typeof navigator.mimeTypes&&navigator.mimeTypes["application/x-googlegears"]&&(a=document.createElement("object"),a.style.display="none",a.width=0,a.height=0,a.type="application/x-googlegears",document.documentElement.appendChild(a))}a&&(window.google||
+/*
+
+  OpenLayers.js -- OpenLayers Map Viewer Library
+
+  Copyright 2005-2011 OpenLayers Contributors, released under the FreeBSD
+  license. Please see http://svn.openlayers.org/trunk/openlayers/license.txt
+  for the full text of the license.
+
+  Includes compressed code under the following licenses:
+
+  (For uncompressed versions of the code used please see the
+  OpenLayers SVN repository: <http://openlayers.org/>)
+
+*/
+
+/* Contains portions of Prototype.js:
+ *
+ * Prototype JavaScript framework, version 1.4.0
+ *  (c) 2005 Sam Stephenson <sam@conio.net>
+ *
+ *  Prototype is freely distributable under the terms of an MIT-style license.
+ *  For details, see the Prototype web site: http://prototype.conio.net/
+ *
+ *--------------------------------------------------------------------------*/
+
+/**  
+*  
+*  Contains portions of Rico <http://openrico.org/>
+* 
+*  Copyright 2005 Sabre Airline Solutions  
+*  
+*  Licensed under the Apache License, Version 2.0 (the "License"); you
+*  may not use this file except in compliance with the License. You
+*  may obtain a copy of the License at
+*  
+*         http://www.apache.org/licenses/LICENSE-2.0  
+*  
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+*  implied. See the License for the specific language governing
+*  permissions and limitations under the License. 
+*
+**/
+
+/**
+ * Contains XMLHttpRequest.js <http://code.google.com/p/xmlhttprequest/>
+ * Copyright 2007 Sergey Ilinsky (http://www.ilinsky.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+/**
+ * Contains portions of Gears <http://code.google.com/apis/gears/>
+ *
+ * Copyright 2007, Google Inc.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice,
+ *     this list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *  3. Neither the name of Google Inc. nor the names of its contributors may be
+ *     used to endorse or promote products derived from this software without
+ *     specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Sets up google.gears.*, which is *the only* supported way to access Gears.
+ *
+ * Circumvent this file at your own risk!
+ *
+ * In the future, Gears may automatically define google.gears.* without this
+ * file. Gears may use these objects to transparently fix bugs and compatibility
+ * issues. Applications that use the code below will continue to work seamlessly
+ * when that happens.
+ */
+
+/**
+ * OpenLayers.Util.pagePosition is based on Yahoo's getXY method, which is
+ * Copyright (c) 2006, Yahoo! Inc.
+ * All rights reserved.
+ * 
+ * Redistribution and use of this software in source and binary forms, with or
+ * without modification, are permitted provided that the following conditions
+ * are met:
+ * 
+ * * Redistributions of source code must retain the above copyright notice,
+ *   this list of conditions and the following disclaimer.
+ * 
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ * 
+ * * Neither the name of Yahoo! Inc. nor the names of its contributors may be
+ *   used to endorse or promote products derived from this software without
+ *   specific prior written permission of Yahoo! Inc.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ */(function(){if(!window.google||!google.gears){var a=null;if("undefined"!=typeof GearsFactory)a=new GearsFactory;else try{a=new ActiveXObject("Gears.Factory"),-1!=a.getBuildInfo().indexOf("ie_mobile")&&a.privateSetGlobalObject(this)}catch(b){"undefined"!=typeof navigator.mimeTypes&&navigator.mimeTypes["application/x-googlegears"]&&(a=document.createElement("object"),a.style.display="none",a.width=0,a.height=0,a.type="application/x-googlegears",document.documentElement.appendChild(a))}a&&(window.google||
 (google={}),google.gears||(google.gears={factory:a}))}})();
 var OpenLayers={VERSION_NUMBER:"Release 2.11",singleFile:!0,_getScriptLocation:function(){for(var a=/(^|(.*?\/))(OpenLayers.js)(\?|$)/,b=document.getElementsByTagName("script"),c,d="",e=0,f=b.length;e<f;e++)if(c=b[e].getAttribute("src"))if(c=c.match(a)){d=c[1];break}return function(){return d}}(),Class:function(){var a=arguments.length,b=arguments[0],c=arguments[a-1],d="function"==typeof c.initialize?c.initialize:function(){b.prototype.initialize.apply(this,arguments)};1<a?(a=[d,b].concat(Array.prototype.slice.call(arguments).slice(1,
 a-1),c),OpenLayers.inherit.apply(null,a)):d.prototype=c;return d}};OpenLayers.Class.isPrototype=function(){};OpenLayers.Class.create=function(){return function(){arguments&&arguments[0]!=OpenLayers.Class.isPrototype&&this.initialize.apply(this,arguments)}};OpenLayers.Class.inherit=function(a){var b=function(){a.call(this)},c=[b].concat(Array.prototype.slice.call(arguments));OpenLayers.inherit.apply(null,c);return b.prototype};
 OpenLayers.inherit=function(a,b){var c=function(){};c.prototype=b.prototype;a.prototype=new c;var d,e,c=2;for(d=arguments.length;c<d;c++)e=arguments[c],"function"===typeof e&&(e=e.prototype),OpenLayers.Util.extend(a.prototype,e)};OpenLayers.Util=OpenLayers.Util||{};OpenLayers.Util.extend=function(a,b){a=a||{};if(b){for(var c in b){var d=b[c];void 0!==d&&(a[c]=d)}!("function"==typeof window.Event&&b instanceof window.Event)&&(b.hasOwnProperty&&b.hasOwnProperty("toString"))&&(a.toString=b.toString)}return a};
 OpenLayers.Protocol=OpenLayers.Class({format:null,options:null,autoDestroy:!0,defaultFilter:null,initialize:function(a){a=a||{};OpenLayers.Util.extend(this,a);this.options=a},mergeWithDefaultFilter:function(a){return a&&this.defaultFilter?new OpenLayers.Filter.Logical({type:OpenLayers.Filter.Logical.AND,filters:[this.defaultFilter,a]}):a||this.defaultFilter||void 0},destroy:function(){this.format=this.options=null},read:function(a){a=a||{};a.filter=this.mergeWithDefaultFilter(a.filter)},create:function(){},
-update:function(){},"delete":function(){},commit:function(){},abort:function(){},createCallback:function(a,b,c){return OpenLayers.Function.bind(function(){a.apply(this,[b,c])},this)},CLASS_NAME:"OpenLayers.Protocol"});OpenLayers.Protocol.Response=OpenLayers.Class({code:null,requestType:null,last:!0,features:null,reqFeatures:null,priv:null,error:null,initialize:function(a){OpenLayers.Util.extend(this,a)},success:function(){return 0<this.code},CLASS_NAME:"OpenLayers.Protocol.Response"});
+update:function(){},"delete":function(){},commit:function(){},abort:function(){},createCallback:function(a,b,c){return OpenLayers.Function.bind(function(){a.apply(this,[b,c])},this)},CLASS_NAME:"OpenLayers.Protocol"});OpenLayers.Protocol.Response=OpenLayers.Class({code:null,requestType:null,last:!0,features:null,data:null,reqFeatures:null,priv:null,error:null,initialize:function(a){OpenLayers.Util.extend(this,a)},success:function(){return 0<this.code},CLASS_NAME:"OpenLayers.Protocol.Response"});
 OpenLayers.Protocol.Response.SUCCESS=1;OpenLayers.Protocol.Response.FAILURE=0;OpenLayers.Protocol.SQL=OpenLayers.Class(OpenLayers.Protocol,{databaseName:"ol",tableName:"ol_vector_features",postReadFiltering:!0,initialize:function(a){OpenLayers.Protocol.prototype.initialize.apply(this,[a])},destroy:function(){OpenLayers.Protocol.prototype.destroy.apply(this)},supported:function(){return!1},evaluateFilter:function(a,b){return b&&this.postReadFiltering?b.evaluate(a):!0},CLASS_NAME:"OpenLayers.Protocol.SQL"});
 OpenLayers.Console={log:function(){},debug:function(){},info:function(){},warn:function(){},error:function(){},userError:function(a){alert(a)},assert:function(){},dir:function(){},dirxml:function(){},trace:function(){},group:function(){},groupEnd:function(){},time:function(){},timeEnd:function(){},profile:function(){},profileEnd:function(){},count:function(){},CLASS_NAME:"OpenLayers.Console"};
 (function(){for(var a=document.getElementsByTagName("script"),b=0,c=a.length;b<c;++b)if(-1!=a[b].src.indexOf("firebug.js")&&console){OpenLayers.Util.extend(OpenLayers.Console,console);break}})();
@@ -1209,6 +1333,7 @@ a/2,b.lon+c/2,b.lat+a/2)},triggerRead:function(a){if(this.response){this.layer.p
 new OpenLayers.Filter.Logical({type:OpenLayers.Filter.Logical.AND,filters:[this.layer.filter,a]}));return a},merge:function(a){this.layer.destroyFeatures();if((a=a.features)&&a.length>0){var b=this.layer.projection,c=this.layer.map.getProjectionObject();if(!c.equals(b))for(var d,e=0,f=a.length;e<f;++e)(d=a[e].geometry)&&d.transform(b,c);this.layer.addFeatures(a)}this.response=null;this.layer.events.triggerEvent("loadend")},CLASS_NAME:"OpenLayers.Strategy.BBOX"});
 OpenLayers.Layer.WorldWind=OpenLayers.Class(OpenLayers.Layer.Grid,{DEFAULT_PARAMS:{},isBaseLayer:!0,lzd:null,zoomLevels:null,initialize:function(a,b,c,d,e,f){this.lzd=c;this.zoomLevels=d;c=[];c.push(a,b,e,f);OpenLayers.Layer.Grid.prototype.initialize.apply(this,c);this.params=OpenLayers.Util.applyDefaults(this.params,this.DEFAULT_PARAMS)},getZoom:function(){var a=this.map.getZoom();this.map.getMaxExtent();return a=a-Math.log(this.maxResolution/(this.lzd/512))/Math.log(2)},getURL:function(a){var a=
 this.adjustBounds(a),b=this.getZoom(),c=this.map.getMaxExtent(),d=this.lzd/Math.pow(2,this.getZoom()),e=Math.floor((a.left-c.left)/d),a=Math.floor((a.bottom-c.bottom)/d);return this.map.getResolution()<=this.lzd/512&&this.getZoom()<=this.zoomLevels?this.getFullRequestString({L:b,X:e,Y:a}):OpenLayers.Util.getImagesLocation()+"blank.gif"},CLASS_NAME:"OpenLayers.Layer.WorldWind"});
+OpenLayers.Protocol.CSW=function(a){var a=OpenLayers.Util.applyDefaults(a,OpenLayers.Protocol.CSW.DEFAULTS),b=OpenLayers.Protocol.CSW["v"+a.version.replace(/\./g,"_")];if(!b)throw"Unsupported CSW version: "+a.version;return new b(a)};OpenLayers.Protocol.CSW.DEFAULTS={version:"2.0.2"};
 OpenLayers.Protocol.WFS.v1_1_0=OpenLayers.Class(OpenLayers.Protocol.WFS.v1,{version:"1.1.0",initialize:function(a){OpenLayers.Protocol.WFS.v1.prototype.initialize.apply(this,arguments);if(this.outputFormat&&!this.readFormat)if(this.outputFormat.toLowerCase()=="gml2")this.readFormat=new OpenLayers.Format.GML.v2({featureType:this.featureType,featureNS:this.featureNS,geometryName:this.geometryName});else if(this.outputFormat.toLowerCase()=="json")this.readFormat=new OpenLayers.Format.GeoJSON},CLASS_NAME:"OpenLayers.Protocol.WFS.v1_1_0"});
 OpenLayers.Format.WMTSCapabilities=OpenLayers.Class(OpenLayers.Format.XML.VersionedOGC,{defaultVersion:"1.0.0",yx:{"urn:ogc:def:crs:EPSG::4326":!0},createLayer:function(a,b){var c,d={layer:true,matrixSet:true},e;for(e in d)if(!(e in b))throw Error("Missing property '"+e+"' in layer configuration.");d=a.contents;e=d.tileMatrixSets[b.matrixSet];for(var f,g=0,h=d.layers.length;g<h;++g)if(d.layers[g].identifier===b.layer){f=d.layers[g];break}if(f&&e){for(var i,g=0,h=f.styles.length;g<h;++g){i=f.styles[g];
 if(i.isDefault)break}c=new OpenLayers.Layer.WMTS(OpenLayers.Util.applyDefaults(b,{url:a.operationsMetadata.GetTile.dcp.http.get,name:f.title,style:i.identifier,matrixIds:e.matrixIds}))}return c},CLASS_NAME:"OpenLayers.Format.WMTSCapabilities"});
@@ -1456,6 +1581,9 @@ this.requestEncoding&&(!this.queryVisible||c.getVisibility())){b.push(c);if(!thi
 a.url[0]:a.url,params:OpenLayers.Util.upperCaseObject(d),callback:function(c){this.handleResponse(b,c,a)},scope:this}},request:function(a,b){var b=b||{},c=this.findLayers();if(c.length>0){for(var d,e,f=0,g=c.length;f<g;f++){e=c[f];d=this.events.triggerEvent("beforegetfeatureinfo",{xy:a,layer:e});if(d!==false){++this.pending;d=this.buildRequestOptions(e,a);d=OpenLayers.Request.GET(d);if(b.hover===true)this.hoverRequest=d}}this.pending>0&&OpenLayers.Element.addClass(this.map.viewPortDiv,"olCursorWait")}},
 handleResponse:function(a,b,c){--this.pending;if(this.pending<=0){OpenLayers.Element.removeClass(this.map.viewPortDiv,"olCursorWait");this.pending=0}if(b.status&&(b.status<200||b.status>=300))this.events.triggerEvent("exception",{xy:a,request:b,layer:c});else{var d=b.responseXML;if(!d||!d.documentElement)d=b.responseText;var e,f;try{e=this.format.read(d)}catch(g){f=true;this.events.triggerEvent("exception",{xy:a,request:b,error:g,layer:c})}f||this.events.triggerEvent("getfeatureinfo",{text:b.responseText,
 features:e,request:b,xy:a,layer:c})}},CLASS_NAME:"OpenLayers.Control.WMTSGetFeatureInfo"});
+OpenLayers.Protocol.CSW.v2_0_2=OpenLayers.Class(OpenLayers.Protocol,{formatOptions:null,initialize:function(a){OpenLayers.Protocol.prototype.initialize.apply(this,[a]);if(!a.format)this.format=new OpenLayers.Format.CSWGetRecords.v2_0_2(OpenLayers.Util.extend({},this.formatOptions))},destroy:function(){this.options&&!this.options.format&&this.format.destroy();this.format=null;OpenLayers.Protocol.prototype.destroy.apply(this)},createCallback:function(a,b,c){return OpenLayers.Function.bind(function(){a.apply(this,
+[b,c])},this)},read:function(a){a=OpenLayers.Util.extend({},a);OpenLayers.Util.applyDefaults(a,this.options||{});var b=new OpenLayers.Protocol.Response({requestType:"read"}),c=this.format.write(a.params);b.priv=OpenLayers.Request.POST({url:a.url,callback:this.createCallback(this.handleRead,b,a),params:a.params,headers:a.headers,data:c});return b},handleRead:function(a,b){if(b.callback){var c=a.priv;if(c.status>=200&&c.status<300){a.data=this.parseData(c);a.code=OpenLayers.Protocol.Response.SUCCESS}else a.code=
+OpenLayers.Protocol.Response.FAILURE;b.callback.call(b.scope,a)}},parseData:function(a){var b=a.responseXML;if(!b||!b.documentElement)b=a.responseText;return!b||b.length<=0?null:this.format.read(b)},CLASS_NAME:"OpenLayers.Protocol.CSW.v2_0_2"});
 OpenLayers.Control.Graticule=OpenLayers.Class(OpenLayers.Control,{autoActivate:!0,intervals:[45,30,20,10,5,2,1,0.5,0.2,0.1,0.05,0.01,0.0050,0.0020,0.0010],displayInLayerSwitcher:!0,visible:!0,numPoints:50,targetSize:200,layerName:null,labelled:!0,labelFormat:"dm",lineSymbolizer:{strokeColor:"#333",strokeWidth:1,strokeOpacity:0.5},labelSymbolizer:{},gratLayer:null,initialize:function(a){a=a||{};a.layerName=a.layerName||OpenLayers.i18n("Graticule");OpenLayers.Control.prototype.initialize.apply(this,
 [a]);this.labelSymbolizer.stroke=false;this.labelSymbolizer.fill=false;this.labelSymbolizer.label="${label}";this.labelSymbolizer.labelAlign="${labelAlign}";this.labelSymbolizer.labelXOffset="${xOffset}";this.labelSymbolizer.labelYOffset="${yOffset}"},destroy:function(){this.deactivate();OpenLayers.Control.prototype.destroy.apply(this,arguments);if(this.gratLayer){this.gratLayer.destroy();this.gratLayer=null}},draw:function(){OpenLayers.Control.prototype.draw.apply(this,arguments);if(!this.gratLayer){var a=
 new OpenLayers.Style({},{rules:[new OpenLayers.Rule({symbolizer:{Point:this.labelSymbolizer,Line:this.lineSymbolizer}})]});this.gratLayer=new OpenLayers.Layer.Vector(this.layerName,{styleMap:new OpenLayers.StyleMap({"default":a}),visibility:this.visible,displayInLayerSwitcher:this.displayInLayerSwitcher})}return this.div},activate:function(){if(OpenLayers.Control.prototype.activate.apply(this,arguments)){this.map.addLayer(this.gratLayer);this.map.events.register("moveend",this,this.update);this.update();

@@ -238,14 +238,6 @@ OpenLayers.Layer.Google = OpenLayers.Class(
          * deletes the mapObject reference before removing this layer from
          * the map.
          */
-		 
-		// lines added to clone google layers 
-		// see http://trac.osgeo.org/openlayers/attachment/ticket/2473/2473.patch
-		this.setGMapVisibility(false); 
-        var cache = OpenLayers.Layer.Google.cache[this.map.id]; 
-        if (cache && cache.count <= 1) { 
-	 	    this.removeGMapElements(false); 
-		
         if (this.map) {
             this.setGMapVisibility(false);
             var cache = OpenLayers.Layer.Google.cache[this.map.id];
