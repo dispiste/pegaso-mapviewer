@@ -14,11 +14,6 @@ div.olLayerDiv {
    -khtml-user-select: none;
 }
 
-/* To avoid ugly google-based pop-up in OL */
-.olLayerGooglePoweredBy.olLayerGoogleV3.gmnoprint {
-visibility:hidden;
-}
-
 .olLayerGoogleCopyright {
     left: 2px;
     bottom: 2px;
