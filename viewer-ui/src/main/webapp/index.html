@@ -2,67 +2,48 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Pegaso Map Viewer</title>
         <script type="text/javascript" src="externals/ext-3.4.0/adapter/ext/ext-base.js"></script>
         <script type="text/javascript" src="externals/ext-3.4.0/ext-all.js"></script>
-        <link rel="stylesheet" type="text/css" href="externals/ext-3.4.0/resources/css/ext-all.css" />
-        <link rel="stylesheet" type="text/css" href="externals/ext-3.4.0/resources/css/pegaso.css" />
-		<link rel="stylesheet" type="text/css" href="externals/GeoExt-1.10/resources/css/popup.css">
-		<link rel="stylesheet" href="styles/css_scalebar/scalebar-thin.css" type="text/css"> 
-		<link rel="stylesheet" type="text/css" href="styles/styles.css" >
-		<script src="http://maps.google.com/maps/api/js?v=3.6&sensor=false"></script> 
-        <script src="externals/OpenLayers-2.11/OpenLayers.js"></script> 
+        <link rel="stylesheet" type="text/css" href="externals/ext-3.4.0/resources/css/ext-all.css">
+        <link rel="stylesheet" type="text/css" href="externals/ext-3.4.0/resources/css/pegaso.css" >
+        <link rel="stylesheet" type="text/css" href="externals/GeoExt-1.10/resources/css/popup.css">
+        <link rel="stylesheet" href="styles/css_scalebar/scalebar-thin.css" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/styles.css" >
+        <script src="http://maps.google.com/maps/api/js?v=3.7&sensor=false"></script>
+        <script src="externals/OpenLayers-2.11/OpenLayers.js"></script>
         <script type="text/javascript" src="externals/GeoExt-1.10/lib/GeoExt.js"></script>
-		<!--<script type="text/javascript" src="http://158.109.143.177:8080/geoserver/pdf/info.json?var=printCapabilities"></script>-->
+        <!--<script type="text/javascript" src="http://158.109.143.177:8080/geoserver/pdf/info.json?var=printCapabilities"></script>-->
+        <script type="text/javascript" src="js/csw/CustomCSWRecordsReader.js"></script>
+        <script type="text/javascript" src="js/csw/CSWSearchField.js"></script>
         <script type="text/javascript" src="js/map.js"></script>
         <script type="text/javascript" src="js/leftTabs.js"></script>
         <script type="text/javascript" src="js/searchTools.js"></script>
-		<script type="text/javascript" src="js/infoByPoint.js"></script>
+        <script type="text/javascript" src="js/infoByPoint.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
-		<script src="js/scaleBar.js"></script>
-		<style type="text/css">
-			
-			#LocSch {
-				padding-left: 80px;
-				padding-top: 10px;
-			}
-			
-			#pegasoBanner li {
-				display: inline;
-				list-style-type: none;
-			}
-			
-			#searchtool div {
-				padding-left: 80px;
-			}
-			
-		</style> 
+        <script src="js/scaleBar.js"></script>
     </head>
     <body>
-    	<!--
-    		generated dynamically from Javascript code
-    		<div id="west-tab-panel">
-    			<div id="layersTab" class="x-hide-display">
-    				<p>Hi. I'm the layer tree panel.</p>
-    			</div>
-    			<div id="legendTab" class="x-hide-display">
-    				<p>Hi. I'm the legend panel.</p>
-    			</div>
-    		</div>
-    	-->
-    	<div id="northDiv" class="x-hide-display">
-    		<div class="mainPegasoLogo">
-    			<a class="mainPegasoLogo" href="http://www.pegasoproject.eu">
-    				<img class="mainPegasoLogo" alt="Pegaso logo" src="img/pegaso_logo.png" />
-    			</a>
-    		</div>
-    		<div id="pegasoBanner">
-				<p id="LocSch"> Search by Location </p> 
-				<div id="searchtool"> 	
-				</div>
-			</div>
-    	</div>
+        <!--
+        generated dynamically from Javascript code
+        <div id="west-tab-panel">
+        <div id="layersTab" class="x-hide-display">
+        <p>Hi. I'm the layer tree panel.</p>
+        </div>
+        <div id="legendTab" class="x-hide-display">
+        <p>Hi. I'm the legend panel.</p>
+        </div>
+        </div>
+        -->
+        <div id="northDiv" class="x-hide-display">
+            <div class="mainPegasoLogo">
+                <a class="mainPegasoLogo" href="http://www.pegasoproject.eu"> <img class="mainPegasoLogo" alt="Pegaso logo" src="img/pegaso_logo.png"> </a>
+            </div>
+            <div id="pegasoBanner">
+                <div id="northTools"></div>
+            </div>
+        </div>
     </body>
 </html>
-</html>
+</html> 
