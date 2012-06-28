@@ -147,8 +147,7 @@ function initMapPanel() {
 					buffer: 0,
 					visibility: false
 				}
-			),/*
-			/*, 
+			),*/
 			new OpenLayers.Layer.WMS("Country Boundaries 2006",
 				"http://pegasosdi.uab.es/ogc/wms?", {
 					layers: "CNTR_BN_03M_2006",
@@ -158,7 +157,7 @@ function initMapPanel() {
 					isBaseLayer: false,
 					buffer: 0
 				}
-			)*/
+			),
 			new OpenLayers.Layer.WMS("Country Boundaries 2010",
 				"http://pegasosdi.uab.es/ogc/wms?", {
 					layers: "CNTR_RG_03M_2010",
@@ -166,9 +165,12 @@ function initMapPanel() {
 					format: "image/png"
 				}, {
 					isBaseLayer: false,
-					buffer: 0
+					buffer: 0,
+					visibility: false
 				}
-			),
+			)
+			/*
+			,
 			new OpenLayers.Layer.WMS("Administrative Units 2010 Level 0",
 				"http://pegasosdi.uab.es/ogc/wms?", {
 					layers: "NUTS_RG_03M_2010_L0",
@@ -178,7 +180,8 @@ function initMapPanel() {
 					isBaseLayer: false,
 					buffer: 0
 				}
-			),
+			),*/
+			/*
 			new OpenLayers.Layer.WMS("Administrative Units 2010 Level 1",
 				"http://pegasosdi.uab.es/ogc/wms?", {
 					layers: "NUTS_RG_03M_2010_L1",
@@ -199,6 +202,7 @@ function initMapPanel() {
 					buffer: 0
 				}
 			),
+			
 			new OpenLayers.Layer.WMS("Administrative Units 2010 Level3",
 				"http://pegasosdi.uab.es/ogc/wms?", {
 					layers: "NUTS_RG_03M_2010_L3",
@@ -208,7 +212,7 @@ function initMapPanel() {
 					isBaseLayer: false,
 					buffer: 0
 				}
-			)
+			)*/
 			
 	]); 
 	
