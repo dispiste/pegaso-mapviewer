@@ -22,20 +22,18 @@ Ext.onReady(function() {
 	initSearchTools();
 	initFeaturedLayers();
 	initLeftTabs();
-	initInfoByPoint(); 
-	
-	
-	
+	initInfoByPoint();
+	initToolbar();
 	
 	
 	new Ext.Viewport({
 		layout: "border",
 		defaults: {border: false},
 		items: [{
-			region: "north",
-			contentEl: "northDiv",
-			height: 80
-				},
+				region: "north",
+				contentEl: "northDiv",
+				height: 80
+			},
 			mapPanel,
 			tabPanel
 		]

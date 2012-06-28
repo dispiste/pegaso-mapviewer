@@ -251,3 +251,52 @@ background-image:url(../img/plus.png) !important;
     border:1px solid #6299c5;
     color:#fff;
 }
+
+/**
+ * Info by Point styles
+ */
+.infoByPointResultFrame {
+    margin: 10px;
+}
+
+.infoByPointResultTitle {
+    font-family:helvetica,tahoma,verdana,sans-serif;
+    font-size:14px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.infoByPointBody {}
+
+.infoByPointRegister {
+    margin-bottom: 10px;
+}
+
+.infoByPointRegister p {
+    padding-bottom: 2px;
+}
+
+.infoByPointRegisterBg {
+/*    background-color: #999933;*/
+    padding: 8px;
+}
+
+/* This will be active just on IE<=8, as nth-child is not working here */
+.infoByPointRegisterBg p {
+    background-color: #999933;
+    padding: 2px;
+}
+
+/* alternate row colours (won't work on IE<=8, the world is not perfect...) */
+.infoByPointRegisterBg p:nth-child(odd) {
+    background-color: #999933;
+    padding: 2px; 
+}
+.infoByPointRegisterBg p:nth-child(even) {
+    background-color: #CCCC99;
+    padding: 2px;
+}
+
+.infoByPointResultFooter {
+    text-align: center;
+}
