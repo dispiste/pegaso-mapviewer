@@ -9,7 +9,6 @@
 var legendPanel;
 var tree;
 var tabPanel;
-var selected_layer;  
 
 /**
  *  TreePanel actions
@@ -119,38 +118,12 @@ function initLeftTabs() {
 		//root: layerList,
 		root: {
 			children: treeConfig
-		},
-		listeners: {
-				'click': function(node,event){
-									//console.log(node.layer.params.LAYERS); 
-									selected_layer = node.layer.params.LAYERS; 
-				}
-		}
-		, 
+		}, 
 		rootVisible: false,
 		bodyStyle: "padding: 5px",
 		lines: false
 	});
 
-	
-	// alerta de los eventos sobre el treePanel
-	Ext.util.Observable.capture(tree, function(event) {                                                                                                        
-                                         console.log("We have got an event in myTree");
-                                         console.log(event); 
-										}
-	);
-	
-	/*
-	tree.getSelectionModel().on('selectionchange', function(selMod,node){
-							//alert('indice ' + rowidx); 
-							console.log(tree.selModel.selNode.layer.params.LAYERS); 
-	})
-	*/
-	
-	//tree.on('expandnode', select_node);
-	
-	
-	
 	//legendPanel 
 	legendPanel = { 	
 		xtype: 'gx_legendpanel', 
