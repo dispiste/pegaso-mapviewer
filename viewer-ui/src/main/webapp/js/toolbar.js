@@ -219,7 +219,7 @@ function initToolbar() {
 								btnPrintClient,
 								'->',
 								btnPermalink,
-								sampleButton
+								botonFL
 								] 
 	});
 
