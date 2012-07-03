@@ -18,8 +18,6 @@ var activeLayers; // activated layers controled from treePanel visibility
 
 function initMapPanel() {
 	
-	Ext.onReady(function(){
-	
 	// set a permalink provider
     var permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
     Ext.state.Manager.setProvider(permalinkProvider);
@@ -257,8 +255,6 @@ function initMapPanel() {
 		alert("di hola, que me voy");
 	}
 	*/
-	
- }); // end of Ext.onReady
  
 }; // end of initMapPanel() function
 
