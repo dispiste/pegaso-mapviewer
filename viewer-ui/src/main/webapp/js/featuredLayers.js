@@ -39,19 +39,19 @@ function initFeaturedLayers() {
 												categories: [
 												{
 													text: 'Layers 1',
-													imgPath: "imagesFL/images/imagen_1.png",
+													imgPath: "img/featuredLayers/imagen_1.png",
 													items: [{
 														text: 'NAME 1',
-														imgPath: "imagesFL/images/Case_1.png"
+														imgPath: "img/featuredLayers/Case_1.png"
 													},
 													{
 														text: 'Corine Land Cover',
-														imgPath: "imagesFL/images/Case_2.png"
+														imgPath: "img/featuredLayers/Case_2.png"
 													}]
 												},
 												{
 													text: 'Indicators',
-													imgPath: "imagesFL/images/imagen_2.png",
+													imgPath: "img/featuredLayers/imagen_2.png",
 													items: []
 												}],
 												ownerButton: btn

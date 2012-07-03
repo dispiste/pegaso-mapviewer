@@ -78,40 +78,17 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 		for (var i=0; i<categories.length; i++) {
 			var category = categories[i];
 			var items = [];
-			var itemIDs = [];
 			for (var j=0; j<category.items.length; j++) {
 				var item = category.items[j];
 				var element = this.getElement(item.text, item.imgPath);
 				items.push(element);
-				itemIDs.push(element.id);
 			}
 			var row = this.getRow(category.text, category.imgPath, items);
 			rows.push(row);
-			/*var ids = {
-				id: row.id,
-				main: row. ,
-				items: itemIDs
-			}
-			categoryIDs.push(ids);*/
 		}
 		var mainContainer = this.getMainContainer(rows);
 		this.add(mainContainer);
 	},
-	/**
-	An object storing the references to the rows and elements
-	[ {
-		id: xxxx,
-		main: iiii,
-		items: [ a, b, c]
-	},
-	{
-		id: yyy,
-		main, jjjjj,
-		items: [d, e, f]
-	}
-		
-	*/
-	//categoryIDs: [],
 	
 	// private:
 	getMainContainer: function(rows) {
@@ -136,27 +113,24 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 		var row =	{
 			xtype: 'container',
 			layout: 'column',
-			id: Ext.id(),
+			itemId: this.rowid(),
 			// items incluye un array de dos contenedores: el de la cuarta imagen y las imagenes que se mostraran ante eventos de raton
 			items: 
 			[
 				{ 
 					xtype: 'container',
-					layout: 'column', 
+					itemId: 'layers',
+					layout: 'column',
 					listeners: {
 						'afterrender' : function(comp){
-							/*
-							Ext.get('contenedor_4').on('mouseleave', function(){
-								FadeOutComps('box_elemento_4','label4', 0.9);
-								Ext.getCmp('box_elemento_4_1').hide();
-								Ext.getCmp('box_elemento_4_2').hide();
-								Ext.getCmp('box_elemento_4_3').hide();
-								Ext.getCmp('box_elemento_4_4').hide();
-								Ext.getCmp('contTxt_4_1').hide();
-								Ext.getCmp('contTxt_4_2').hide();
-								Ext.getCmp('contTxt_4_3').hide();
-								Ext.getCmp('contTxt_4_4').hide();
-							});*/
+							comp.el.on('mouseleave', function(evt, el, o){
+								comp.el.fadeOut({
+									endOpacity: 0.4,
+									duration: 0.05
+								});
+								var elementsContainer = Ext.getCmp(comp.id);
+								elementsContainer.hide();
+							});
 						}
 					},
 					items: items,
@@ -178,22 +152,17 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 										this.fadeOut({
 											endOpacity: 0.4,
 											duration: 0.05
-											});
-										
-										Ext.getCmp('box_elemento_4_1').show();
-										Ext.getCmp('box_elemento_4_2').show();
-										Ext.getCmp('box_elemento_4_3').show();
-										Ext.getCmp('box_elemento_4_4').show();
-										Ext.getCmp('contTxt_4_1').show();
-										Ext.getCmp('contTxt_4_2').show();
-										Ext.getCmp('contTxt_4_3').show();
-										Ext.getCmp('contTxt_4_4').show();
+										});
+										var elementsContainer = Ext.getCmp(this.id).ownerCt.ownerCt.getComponent('layers');
+										for (var i=0; i<elementsContainer.items.length; i++) {
+											elementsContainer.getComponent(i).show();
+										}
+										elementsContainer.show();
 									});
 								}
 							},
 							items: {
 								xtype: 'box', 
-								id: 'box_elemento_4',
 								autoEl: {
 										tag: 'img',
 										src: imgPath
@@ -214,7 +183,7 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 								'padding-left' : "10px",
 								'background-color':  '#CCCCCC'
 							}
-						}																
+						}
 					]
 				}
 			]
@@ -225,11 +194,13 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 	getElement: function(title, imgPath) {
 		var element = {
 			xtype: 'container',
-			id: Ext.id(),
+			autoShow : true,
 			width: 110,
+			hidden: true,
 			items: [
 				{
-					xtype: 'box', 
+					xtype: 'box',
+					autoShow : true,
 					autoEl: {
 						tag: 'img',
 						src: imgPath
@@ -239,15 +210,14 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 						'border'  : '2px solid',
 						'background-color' : '#F7F8E0'
 					},
-					hidden: true,
 					autoWidth: true,
 					listeners: {
 						'afterrender' : function(comp){
 							comp.el.on('mouseover', function(a,imageElement,obj){
-								Ext.getCmp('subcontainer_caja_4_1').items.items[0].el.setStyle('padding: 0px');											
+								Ext.getCmp('subcontainer_caja_4_1').items.items[0].el.setStyle('padding: 0px');
 								Ext.getCmp('subcontainer_caja_4_1').items.items[0].el.setWidth(110);
 							});
-							comp.el.on('mouseout', function(a,imageElement,obj){							
+							comp.el.on('mouseout', function(a,imageElement,obj){
 								Ext.getCmp('subcontainer_caja_4_1').items.items[0].el.setWidth(90);
 							});
 											
@@ -259,8 +229,8 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 				},
 				{
 					xtype: 'box',
+					autoShow : true,
 					autoHeight: true,
-					hidden: true, 
 					layout: 'fit', 
 					// http://www.sencha.com/forum/showthread.php?79107-Problem-removing-panel-border
 					autoEl: {
@@ -276,12 +246,21 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 		return element;
 	},
 	// private
-    onRender : function(ct, position){
+	onRender: function(ct, position){
 		if (this.ownerButton) {
 			UAB.feat.FeaturedLayers.superclass.onRender.call(this, ct, position);
 			var x = this.ownerButton.el.getXY()[0]-this.fixedWidth+this.ownerButton.el.getWidth();
 			var y = this.ownerButton.el.getXY()[1]+this.ownerButton.el.getHeight();
 			this.getEl().setXY([x,y]); // just under position of "Featured Layers" button
 		}
+	},
+	// private: counter to reference internal components
+	compId: 0,
+	// private
+	elementid: function() {
+		return "feat-ele"+this.compId++;
+	},
+	rowid: function() {
+		return "feat-row"+this.compId++;
 	}
 });
