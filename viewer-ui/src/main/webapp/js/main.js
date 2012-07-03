@@ -10,12 +10,9 @@
 
 
 Ext.onReady(function() {
-	Ext.get('loading-mask').fadeIn();
-	
 	setTimeout(function(){
-			Ext.get('loading').remove();
-			Ext.get('loading-mask').fadeOut({remove:true});
-			}, 1000);
+			Ext.get('loading').fadeOut({remove:true});
+			}, 500);
 
 	initMapPanel();
 	returnActiveLayersII(); // function to return active layers according to visible layers in treePanel

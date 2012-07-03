@@ -238,7 +238,7 @@ function resultToArray(resultArray) {
  */
 function getLayerIDsOnServer(layers) {
 	if (layers.length > 0) {
-		return layers[0].params.LAYERS
+		return layers[0].params.LAYERS;
 	}
 }
 
@@ -246,7 +246,7 @@ function checkRasterFields(resultArray) {
 	if (resultArray.length > 0
 			&& resultArray[0].attributes
 			&& resultArray[0].attributes.value_0
-			&& resultArray[0].attributes.class
+			&& resultArray[0].attributes['class']
 			&& resultArray[0].attributes.red
 			&& resultArray[0].attributes.green
 			&& resultArray[0].attributes.blue
