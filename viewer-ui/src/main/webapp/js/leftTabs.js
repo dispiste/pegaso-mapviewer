@@ -23,20 +23,6 @@ function onAction(node, action, evt) {
 	}
 };
 
-/*
-//TAKE A LOOK AT: http://www.sourcepole.ch/2010/9/28/understanding-what-s-going-on-in-extjs
-// http://stackoverflow.com/questions/2623042/extjs-tree-selecting-node-after-creating-the-tree
- function select_node(node) {
-          node.eachChild( function(child) { 
-            if(child.attributes.real_id == real_id ) {
-              child.select();
-              //categories_panel.un('expandnode', select_node);
-            }
-          });
-        };
-*/
-
-
 /**
  * Initializes the layerTree and the legend
  */
@@ -50,22 +36,7 @@ function initLeftTabs() {
 		Ext.getCmp('west-tab-panel').collapse();
 	};
 
-	var LayerNodeUI = Ext.extend(GeoExt.tree.LayerNodeUI, new GeoExt.tree.TreeNodeUIEventMixin());
-
-	var layerList = new GeoExt.tree.LayerContainer({
-		layerStore: mapPanel.layers,
-		expanded: true,
-		loader: {
-			baseAttrs: {
-				uiProvider: "layernodeui",
-				iconCls: 'icono5',
-				actions: [{
-					action: "delete",
-					qtip: "delete"
-				}]
-			}
-		}
-	});
+	var LayerNodeUI = Ext.extend(UAB.tree.LayerNodeUI, new GeoExt.tree.TreeNodeUIEventMixin());
 	
 	var treeConfig = [{
 		nodeType: "gx_overlaylayercontainer",
@@ -75,7 +46,7 @@ function initLeftTabs() {
 		iconCls: 'icono3', 
 		loader: {
 			baseAttrs: {
-				uiProvider: "layernodeui",
+				uiProvider: LayerNodeUI,
 				iconCls: 'icono5', // parametro decisivo a la hora de cambiar el icono de los elementos hijos
 				actions: [{
 					action: "delete",
@@ -91,12 +62,13 @@ function initLeftTabs() {
 		iconCls: 'icono3',
 		loader: {
 			baseAttrs: {
+				uiProvider: UAB.tree.LayerNodeUI,
 				iconCls: 'icono5'
 			}
 		}
 	}];
 
-	tree = new Ext.tree.TreePanel({
+	tree = new UAB.tree.CustomTreePanel({
 		plugins: [
 				  {
 					  ptype: "gx_treenodeactions",
@@ -134,13 +106,13 @@ function initLeftTabs() {
 		},
 		autoScroll: true
 	}
- 
+
 	//tabPanel containing tree and legendPanel items
 	tabPanel = {
 			id: "west-tab-panel",
 			layout:'card',
 			activeItem: 0,
-			width: 250,
+			width: 300,
 			region: 'west',
 			bodyStyle: 'padding: 0px',
 			split: true,
@@ -169,6 +141,45 @@ function initLeftTabs() {
 					legendPanel
 			]
 		};
+	
+	tree.on("iconClick", function(node, e) {
+		var layer = node.layer;
+		// create a unique ID for the window to avoid opening two identical windows if (e.g.) double clicked
+		var id = "uab-wnd-" + layer.id;
+		var window  = Ext.getCmp(id);
+		if (!window) {
+			window = new Ext.Window({
+				id: id,
+				title: node.text,
+				bodyStyle: 'padding:10px',
+				x: 60,
+				y: e.xy[1],
+				layout: 'fit',
+				width: 230,
+				height: 80,
+				items: new Ext.Container({
+					layout:'form',
+					ctCls: 'uab-layer-window-body',
+					items: [
+					{
+						xtype: "gx_opacityslider",
+						layer: layer,
+						aggressive: true,
+						name: 'opacity',
+						fieldLabel: 'Opacity'
+					}]
+				})
+			});
+		}
+		window.show(node.getUI());
+	});
+}
 
-		
+function selectTopLayer() {
+	// select the top thematic layer (if existing)
+	if(tree.getRootNode() &&
+		tree.getRootNode().childNodes.length > 0 &&
+		tree.getRootNode().childNodes[0].childNodes.length > 0) {
+			tree.getSelectionModel().select(tree.getRootNode().childNodes[0].childNodes[0])
+	}
 }
