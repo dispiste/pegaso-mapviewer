@@ -84,17 +84,17 @@ div.mainPegasoLogo {
   width: 16 px !important;
 }
 .botonPan{
-  background-image:url(../img/icon_pan.png) !important;
+  background-image:url(../img/icon_pan16_17.png) !important;
   height:16 px !important;
   width: 16 px !important;
 }
 .botonZoomIn{
-  background-image:url(../img/icon_zoomIn.png) !important; 
+  background-image:url(../img/icon_zoomIn16.png) !important; 
   height:16 px !important;
   width: 16 px !important;
 }
 .botonZoomOut{
-  background-image:url(../img/icon_zoomOut.png) !important; 
+  background-image:url(../img/icon_zoomOut16.png) !important; 
   height:16 px !important;
   width: 16 px !important;
 }
@@ -300,3 +300,5 @@ background-image:url(../img/plus.png) !important;
 .infoByPointResultFooter {
     text-align: center;
 }
+
+.uab-layer-window-body { background:#fff !important; }
