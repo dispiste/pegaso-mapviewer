@@ -77,7 +77,7 @@ function initSearchTools() {
 	} 
 	var loadLayers = new UAB.csw.CSWSearchField(cswconfig);
 	// TODO: loadByProvider has not been implemented yet
-	var loadByProvider = new UAB.csw.CSWSearchField(cswconfig);
+	//var loadByProvider = new UAB.csw.CSWSearchField(cswconfig);
 	
 	var searchCatalog = new Ext.TabPanel({
 	    id: 'searchPanel',
@@ -100,13 +100,13 @@ function initSearchTools() {
         	xtype: 'panel', 
         	items: loadLayers,
         	layout: 'fit'
-        },
+        }/*,
         {
         	title: "Load by provider",
         	items: loadByProvider,
         	layout: 'fit',
         	xtype: 'panel'
-        }]
+        }*/]
     });
 	
 	var northToolsPanel = new Ext.Container({
