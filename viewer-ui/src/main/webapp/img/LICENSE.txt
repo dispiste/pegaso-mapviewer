@@ -1,0 +1,6 @@
+ICONS:
+
+** Pins icons were derived from "pins-by-doofi" image downloaded      from OpenClipart.org. It was created by doofi and it is on the public domain:
+     http://openclipart.org/detail/129961/pins-by-doofi
+
+** Zoom in, out and pan icons were derived from MapFish toolbar icons.
