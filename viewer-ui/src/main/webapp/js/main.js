@@ -10,18 +10,19 @@
 
 
 Ext.onReady(function() {
-	setTimeout(function(){
-			Ext.get('loading').fadeOut({remove:true});
-			}, 500);
+	// The proxy is necessary for WMSGetFeatureInfo or CSW queries to servers different than localhost (e.g. GetFeatureInfo for VLIZ layers)
+	OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
+	
+	setTimeout(function() {
+		Ext.get('loading').fadeOut({
+			remove : true
+		});
+	}, 500);
 
 	initMapPanel();
 	returnActiveLayersII(); // function to return active layers according to visible layers in treePanel
 	initSearchTools();
-	initFeaturedLayers();
 	initLeftTabs();
-	initInfoByPoint();
-	initToolbar();
-	
 	
 	new Ext.Viewport({
 		layout: "border",
@@ -35,4 +36,6 @@ Ext.onReady(function() {
 			tabPanel
 		]
 	});
+	
+	selectTopLayer();
 });

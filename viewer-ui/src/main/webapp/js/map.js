@@ -9,228 +9,241 @@
 var map; 
 var mapPanel;
 var activeLayers; // activated layers controled from treePanel visibility
-
-
-/**
- *  TreePanel actions
- */
  
 
 function initMapPanel() {
 	
-	// set a permalink provider
-    var permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
-    Ext.state.Manager.setProvider(permalinkProvider);
-	
-	
-	var windowPermalink = new Ext.Window({
-											title: 'URL Permalink',
-											id: 'ventana',
-											width: 500,
-											autoHeight: true, 
-											border: false,
-											layout: 'fit',
-											closeAction: "hide" // to avoid problems when closing windod!
-											//,items: Ext.getCmp('ventanita_id')
-				}); 
-				
-	//windowPermalink.show();
-	
-	
-	
-	
-	 
-	
 	var options = {
 		sphericalMercator: true,
 		projection: new OpenLayers.Projection("EPSG:900913"),
-		units: "m", 
-		maxExtent: new OpenLayers.Bounds(-19567879.238281,-19567879.068281,19567879.238281,19567879.408281),
-		maxResolution: 156543.0339, 
-		// controls: []
-		controls: [new OpenLayers.Control.Permalink()]
+		units: "m",
+		layers: App.config.layers,
+		controls: []
 	};
 	
 	map = new OpenLayers.Map(options);
+	//map.addControl(new OpenLayers.Control.LayerSwitcher());
+	
+	// to show messages if tooltip is used in GeoExt.Action buttons
+	Ext.QuickTips.init();
+	var btnPrintServer = new GeoExt.Action({
+									enableToggle: false,
+									bodyStyle:'padding: 10px',
+									tooltip: "Print to PDF",
+									iconCls: "btnPrintServerPDF"
+	}); 
+	
+	
+	var btnPrintClient = new GeoExt.Action({
+									enableToggle: false,
+									bodyStyle:'padding: 10px',
+									tooltip: "Print Map",
+									iconCls: "botonPrintClientPDF", 
+									handler: function(){				
+														window.open('print_good.html'); 
+									}
+	}); 
 
-	/*
-	var permalink = new OpenLayers.Control.Permalink();
-	map.addControl(permalink);
-	*/
-	
-	// add layers to map 
-	map.addLayers([
-			new OpenLayers.Layer.Google("Google Satellite",
-						{type: google.maps.MapTypeId.SATELLITE 
-						//, numZoomLevels: 12
-						, maxExtent: new OpenLayers.Bounds(-19567879.238281,-19567879.068281,19567879.238281,19567879.408281)
-						}
-			),	
-			new OpenLayers.Layer.Google("Google Streets",
+
+	// History Control
+	var ctrlHist = new OpenLayers.Control.NavigationHistory();
+	map.addControl(ctrlHist);
+
+
+	// Navigation Control
+	// Enable zoom by using mouse wheel 
+	var ctrlWheel = new OpenLayers.Control.Navigation(
 						{
-						//, numZoomLevels: 12
-						 maxExtent: new OpenLayers.Bounds(-19567879.238281,-19567879.068281,19567879.238281,19567879.408281)
+							zoomWheelEnabled: true
 						}
-			),
-			new OpenLayers.Layer.OSM("OpenStreetMap"),
-			new OpenLayers.Layer.WMS("NASA Global Imagery",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "NASA_BLUEMARBLE"
-				}, {
-					isBaseLayer: true
-				}
-			),
-			new OpenLayers.Layer.WMS("Corine 2006 100m",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "CORINE_CLC06_100m",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0
-				}
-			),
-			new OpenLayers.Layer.WMS("ESA Globcorine 2005",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "GLOBCORINE_2005",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0,
-					visibility: false
-				}
-			),
-			new OpenLayers.Layer.WMS("ESA Globcorine 2009",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "GLOBCORINE_2009",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0,
-					visibility: false
-				}
-			),
-			new OpenLayers.Layer.WMS("Natura 2000",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "NATURA2000",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0, 
-					visibility: false
-				}
-			),  
-			new OpenLayers.Layer.WMS("USGS Elevation model GTopo30",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "EDM_USGS_W020N40,EDM_USGS_E020N40,EDM_USGS_W020N90,EDM_USGS_E020N90",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0,
-					visibility: false
-				}
-			),
-			/*
-			new OpenLayers.Layer.WMS("Grid 1km ETRS89 LAEA",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "Mediterranean_and_Black_Seas",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0,
-					visibility: false
-				}
-			),*/
-			new OpenLayers.Layer.WMS("Country Boundaries 2006",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "CNTR_BN_03M_2006",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0
-				}
-			),
-			new OpenLayers.Layer.WMS("Country Boundaries 2010",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "CNTR_RG_03M_2010",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0,
-					visibility: false
-				}
-			)
-			/*
-			,
-			new OpenLayers.Layer.WMS("Administrative Units 2010 Level 0",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "NUTS_RG_03M_2010_L0",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0
-				}
-			),*/
-			/*
-			new OpenLayers.Layer.WMS("Administrative Units 2010 Level 1",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "NUTS_RG_03M_2010_L1",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0
-				}
-			),
-			new OpenLayers.Layer.WMS("Administrative Units 2010 Level 2",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "NUTS_RG_03M_2010_L2",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0
-				}
-			),
+	); 
+	map.addControl(ctrlWheel);
+					
+	// PAN CONTROL //
+	
+	var btnPan = new GeoExt.Action({
+						map: map,	
+						// Navegation Control have more options to control drag and pan
+						// http://dev.openlayers.org/docs/files/OpenLayers/Control/Navigation-js.html
+						// http://dev.openlayers.org/docs/files/OpenLayers/Control/DragPan-js.html#OpenLayers.Control.DragPan
+						control: new OpenLayers.Control.DragPan(),
+						enableToggle: true,
+						tooltip: "Pan",
+						iconCls: "botonPan",
+						toggleGroup: 'groupToggleButtons', 
+						pressed : true,
+						//enabled: true, 
+						activateOnEnable: true, 
+						deactivateOnDisable: true
+	});
+	
+	
+	// NAVIGATION PREVIOUS AND NEXT
+	
+	var btnPrev = new GeoExt.Action({
+						map: map,	
+						control: ctrlHist.previous,
+						tooltip: "Previous Navigation",
+						iconCls: "botonPrevious"
+	});
+	
+	
+	var btnPost = new GeoExt.Action({
+						map: map,
+						control: ctrlHist.next,
+						tooltip: "Next Navigation", 
+						iconCls: "botonNext"
+	});
+
+
+	var ctrlZoomIn = new OpenLayers.Control.ZoomBox();
+	
+
+	var btnZoomIn = new GeoExt.Action({
+							control: ctrlZoomIn, 
+							map: map,
+							enableToggle: true,
+							tooltip: "Zoom In",
+							iconCls: "botonZoomIn",
+							toggleGroup: 'groupToggleButtons',
+							activateOnEnable: true, 
+							deactivateOnDisable: true
+	});
+	
+					
+	
+	var ctrlZoomOut = new OpenLayers.Control.ZoomBox({out: true});
+	
+	
+	var btnZoomOut = new GeoExt.Action({
+							control: ctrlZoomOut, 
+							map: map,
+							enableToggle: true,
+							tooltip: "Zoom Out",
+							iconCls: "botonZoomOut", 
+							toggleGroup: 'groupToggleButtons',
+							activateOnEnable: true, 
+							deactivateOnDisable: true
+	});
+
+
+	var btnZoomFullExtent = new GeoExt.Action({
+		map : map,
+		enableToggle : false,
+		layout : 'form',
+		tooltip : "Full Extent",
+		iconCls : "botonFullExtent",
+		handler : function() {
+			// http://dev.openlayers.org/releases/OpenLayers-2.11/examples/setextent.html
+			//var bounds = new OpenLayers.Bounds(-19567879.238281,-19567879.068281,19567879.238281,19567879.408281);
+			//map.zoomToExtent(bounds);
+			//map.zoomToMaxExtent();
+			var lonlat = new OpenLayers.LonLat(2102825.1807922, 4661687.4971957);
+			map.setCenter(lonlat, 4);
+		}
+	});
+
+	
+	var btnInfo = new UAB.infotool.InfoAction({
+		map: map,
+		toggleGroup: 'groupToggleButtons',
+		templatesConfig: App.config.featureInfo
+	});
+
+		// set a permalink provider
+    var permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
+    Ext.state.Manager.setProvider(permalinkProvider);
+	var windowPermalink = new Ext.Window({
+		title : 'URL Permalink',
+		id : 'permalinkWindow',
+		width : 500,
+		autoHeight : true,
+		border : false,
+		layout : 'fit',
+		closeAction : "hide" // to avoid problems when closing window!
+	});
+
+	var btnPermalink = new GeoExt.Action({
+		tooltip: "Link Map", 
+		iconCls: "botonPermalink",
+		handler: function(btn, event) {
+			link = permalinkProvider.getLink();
+			var window = Ext.getCmp("permalinkWindow");
+			window.show();
+			window.body.update("<a href=" + link + ">" + link + "</a>");
+		}
+	});
+	
+	//////////////////////////
+	// OVERVIEW MAP CONTROL //
+	//////////////////////////
 			
-			new OpenLayers.Layer.WMS("Administrative Units 2010 Level3",
-				"http://pegasosdi.uab.es/ogc/wms?", {
-					layers: "NUTS_RG_03M_2010_L3",
-					transparent: true,
-					format: "image/png"
-				}, {
-					isBaseLayer: false,
-					buffer: 0
+	var optionsOverviewMap = {
+		id: 'overvMap',
+		minRatio: 16, 
+		maxRatio: 64, 
+		maximized: false,
+		mapOptions: {
+			// See the effect by searching a location in search tab and take a look at red box in the overviewmap
+			 numZoomLevels: 3
+		}
+	};
+
+	map.addControl(new OpenLayers.Control.OverviewMap(optionsOverviewMap));
+
+	
+	//////////////////////////
+	// SCALE BAR            // TAKE A LOOK AT: http://dev.openlayers.org/addins/scalebar/trunk/examples/scalebar.html
+	////////////////////////// http://trac.osgeo.org/openlayers/attachment/ticket/24/scalebar.patch
+	
+	//var scaleLinea = new OpenLayers.Control.ScaleLine();
+	
+	var scaleBar = new OpenLayers.Control.ScaleBar({
+								abbreviateLabel: true, // kilometers to KM
+								minWidth: 100, // default is 100 pixels
+								maxWidth: 300 // default is 200 pixels); 
+	}); 
+	
+	//map.addControl(scaleLinea); 
+	map.addControl(scaleBar); 
+	
+	var panPanelCtrl = new OpenLayers.Control.PanPanel();
+	var zoomPanelCtrl = new OpenLayers.Control.PanZoom();
+	
+	map.addControls([panPanelCtrl,zoomPanelCtrl]);
+
+
+	var botonFL = new Ext.Button({
+		id: 'botonExtJS',
+		text: 'Featured Layers', 
+		enableToggle: true,
+		//renderTo: document.body,  // it has to belong to tbar
+		toggleHandler: function(btn){	
+			if (btn.pressed){
+				if (!btn.featuredLayersContainer) {
+					var config = {
+						categories: App.config.featuredLayers,
+						ownerButton: btn
+					};
+					btn.featuredLayersContainer = new UAB.feat.FeaturedLayers(config);
 				}
-			)*/
-			
-	]); 
+				// we render to document body but we add a listener to be appeared (as DOM element) at some position on the screen 
+				btn.featuredLayersContainer.render(document.body); 
+				btn.featuredLayersContainer.doLayout();
+				btn.featuredLayersContainer.getEl().slideIn('t', {
+					easing: 'easeBoth',
+					duration: 0.5
+				});
+			} else {
+					
+				btn.featuredLayersContainer.getEl().slideOut('t',{
+					easing: 'easeBoth',
+					duration: 0.5
+				});	
+			}
+		}
+	});
 	
-	
-	
-	
-	var onStatechange = function(provider){
-						if(windowPermalink.rendered == true){
-								link = provider.getLink();
-								Ext.getCmp("ventana").body.update("<a href=" + link + ">" + link + "</a>");
-								//Ext.get("permalinkPanel").doLayout();
-						}
-				};
-				
-	permalinkProvider.on({statechange: onStatechange});
-	
-	
-	
-	
-		
 	mapPanel = new GeoExt.MapPanel({
 		region: "center",
 		id: "mappanel",
@@ -240,22 +253,24 @@ function initMapPanel() {
 		zoom: 4,
 		stateId: "map", // to control the state of the Map so as to make permalinks properly
 		prettyStateKeys: true,
-		split: true, 
+		split: true,
+		tbar: [
+			btnPan,
+			btnZoomIn, 
+			btnZoomOut,
+			btnInfo,
+			'-',
+			btnPrev,
+			btnPost,
+			btnZoomFullExtent, 
+			btnPrintClient ,
+			'->',
+			//btnPermalink,
+			botonFL
+		],
 		plugins:[] // important in order to add dyncamically  plugins once a panel is instantiated
 	});
-	
-	/*
-	var permalink = new OpenLayers.Control.Permalink();
-	map.addControl(permalink);
-	*/
-	
-	/*
-	// check that there is not a center and alert me!!
-	if (!map.getCenter()){
-		alert("di hola, que me voy");
-	}
-	*/
- 
+
 }; // end of initMapPanel() function
 
 	
