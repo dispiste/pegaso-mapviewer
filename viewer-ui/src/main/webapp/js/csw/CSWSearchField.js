@@ -44,6 +44,13 @@ UAB.csw.CSWSearchField  = Ext.extend(Ext.form.TriggerField, {
 	 */
 	template: null,
 	fields: ['title', 'abstract', 'URI', 'wmsurl', 'wmslayers', 'identifier', 'source'],
+	listeners: {
+		specialkey: function(field, e) {
+			if (e.getKey() == e.ENTER) {
+				this.cswSearch(this.getValue());
+			}
+		}
+	},
     /**
      * Queries the configured CSW server and shows the results in a Window.
      *
