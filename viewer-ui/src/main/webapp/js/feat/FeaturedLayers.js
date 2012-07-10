@@ -1,30 +1,38 @@
 Ext.namespace("UAB", "UAB.feat");
 
+// add a layer to the map by clicking on the corresponding image (items) accordingly to server URL and layer name
+	var addLayerToTree = function(serverURL,layerName){
+		var addedLayer = new OpenLayers.Layer.WMS(layerName.replace(/_/g, " "),
+											  serverURL, 
+											  {
+												layers: layerName,
+												transparent: true,
+												format: "image/png"
+											  }, {
+												isBaseLayer: false,
+												buffer: 0,
+												visibility: true
+											  }
+											);
+		addedLayer.id = "OL_WMS_addedLayer_" + layerName;
+		map.addLayer(addedLayer);
+		Ext.Msg.alert('Featured Layers', 'You have added ' + layerName.replace(/_/g, " ") + ' layer successfully !');
+	};
+	
+// remove a layer to the map by clicking on the corresponding image (items) accordingly to server URL and layer name
+	var removeLayerToTree = function(layerObj){
+		map.removeLayer(layerObj);
+		Ext.Msg.alert('Featured Layers', 'You have removed ' + layerObj.name + ' layer successfully !');
+	};	
+
 /**
  * @class Uab.feat.FeaturedLayers.js
  * @extends Ext.Panel
 
- var dummyConfig = {
-	categories: [{
-		text: 'Layers 1',
-		items: [{
-			text: 'NAME 1',
-			imgPath: "imagesFL/FeaturedLayers1.png"
-		},
-		{
-			text: 'Corine Land Cover',
-			imgPath: "imagesFL/FeaturedLayers2.png"
-		}]
-	},
-	{
-		text: 'Pegaso Indicators',
-		items: [];
-	}
- };
-
  * <p>This component site images on a panel and make visible/invisible 
    another images on mouse over</p>
  */
+
 UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 	fixedWidth: 570,
 	fixedHeight: 510,
@@ -35,31 +43,42 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 	 */	
 	ownerButton: null,
 	/**
-	 * @cfg {Config object} categories (required).
-	 * A configuration object defining the categories to create, the layers to include in each category
-	 * and the images and texts to show in each category and layer. This configuration object should be
-	 * shaped as follows:
-	 <pre><code>
+	 * @cfg {Object} categories (required).
+	 * A configuration object defining the categories to create, the layers and the images to include in each category
+	 * and the URL-path pointing to server providing that layer. 
+	 * This configuration object should be shaped as follows:
+	 * <p>Usage:</p><pre><code>
 	 categories: [{
-		text: 'Layers 1',
-		imgPath: "imagesFL/FeaturedLayersCategory1.png",
-		items: [{
-			text: 'NAME 1',
-			imgPath: "imagesFL/FeaturedLayers1.png"
-		},
-		{
-			text: 'Corine Land Cover',
-			imgPath: "imagesFL/FeaturedLayers2.png"
-		}]
-	},
-	{
-		text: 'Pegaso Indicators',
-		imgPath: "imagesFL/FeaturedLayersCategory2.png",
-		items: []
-	}]
-	</pre></code>
+						text: 'Layers Group I',
+						imgPath: "imagesFL/FeaturedLayersCategory1.png",
+						items: [{
+							text: 'Corine Land Cover 1996',
+							imgPath: "imagesFL/FeaturedLayers1.png",
+							server: "http://pegasosdi.uab.es/ogc/wms?",
+							layer: "CLC_EU_96"
+						},
+						{
+							text: 'Corine Land Cover 2000',
+							imgPath: "imagesFL/FeaturedLayers2.png",
+							server: "http://pegasosdi.uab.es/ogc/wms?",
+							layer: "CLC_EU_00"
+						}]
+				},
+				{
+						text: 'Pegaso Indicators',
+						imgPath: "imagesFL/FeaturedLayersCategory2.png",
+						items: []
+				}]
+	 * </code></pre>
 	 */	
+	 
 	categories: null,
+	/**
+	 * A property to read an object configuration showing server URL and layer name for a container element. Read-only.
+     * @type Object
+     * @property elementItemsInfo  
+	*/
+	elementItemsInfo: null,	
 	constructor: function(config) {
 		config = config || {};
 		config.ownerButton || console.log("The 'ownerButton' config parameter is required");
@@ -68,7 +87,6 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 		config.width = config.width || this.fixedWidth;
 		config.height = config.height || this.fixedHeight;
 		config.bodyStyle = 'background:transparent;';
-		
 		UAB.feat.FeaturedLayers.superclass.constructor.call(this, config);
 		this.buildUI();
 	},
@@ -77,19 +95,21 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 		var rows = [];
 		for (var i=0; i<categories.length; i++) {
 			var category = categories[i];
-			var items = [];
+			var items = []; // an array of Ext Containers corresponding to items defined in categories
+			//var info = [];
+			var elementItemsInfo = {};
 			for (var j=0; j<category.items.length; j++) {
 				var item = category.items[j];
-				var element = this.getElement(item.text, item.imgPath);
-				items.push(element);
-			}
+				var element = this.getElement(item.text, item.imgPath); // returns an Ext Container
+				element.elementItemsInfo = this.getElementItemsInfo(item.server,item.layer,item.activ);		
+				items.push(element); 
+			};
 			var row = this.getRow(category.text, category.imgPath, items);
 			rows.push(row);
-		}
+		};
 		var mainContainer = this.getMainContainer(rows);
 		this.add(mainContainer);
 	},
-	
 	// private:
 	getMainContainer: function(rows) {
 		var mainContainer = new Ext.Container({
@@ -103,8 +123,7 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 			style: {
 				'padding' : '10px'
 			},
-			items: rows
-			
+			items: rows		
 		});
 		return mainContainer;
 	},
@@ -114,32 +133,12 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 			xtype: 'container',
 			layout: 'column',
 			itemId: this.rowid(),
-			// items incluye un array de dos contenedores: el de la cuarta imagen y las imagenes que se mostraran ante eventos de raton
 			items: 
 			[
-				{ 
-					xtype: 'container',
-					itemId: 'layers',
-					layout: 'column',
-					listeners: {
-						'afterrender' : function(comp){
-							comp.el.on('mouseleave', function(evt, el, o){
-								comp.el.fadeOut({
-									endOpacity: 0.4,
-									duration: 0.05
-								});
-								var elementsContainer = Ext.getCmp(comp.id);
-								elementsContainer.hide();
-							});
-						}
-					},
-					items: items,
-				},
-				//
-				// container para la imagen principal (cuarta) que aparece por defecto
-				//
+				// container for main IMAGE (at right position) 
 				{
 					xtype: 'container',
+					itemId: 'layerMain',
 					style: {
 						'float': 'right'
 					},
@@ -150,7 +149,7 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 								'afterrender' : function(comp){
 									comp.el.on('mouseenter', function(evt, el, o){
 										this.fadeOut({
-											endOpacity: 0.4,
+											endOpacity: 0.6,
 											duration: 0.05
 										});
 										var elementsContainer = Ext.getCmp(this.id).ownerCt.ownerCt.getComponent('layers');
@@ -158,7 +157,11 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 											elementsContainer.getComponent(i).show();
 										}
 										elementsContainer.show();
-									});
+										// for testing
+										/*elementsContainer.on('beforehide', function(){
+														return false; 
+										});*/
+									});	
 								}
 							},
 							items: {
@@ -166,8 +169,7 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 								autoEl: {
 										tag: 'img',
 										src: imgPath
-										},		
-								autoWidth: true	
+										}	
 							}
 						},
 						{
@@ -177,15 +179,38 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 							// http://www.sencha.com/forum/showthread.php?79107-Problem-removing-panel-border
 							autoEl: {
 								tag: 'div',
-								html: title,
+								html: title
 							}, 
 							style: {
-								'padding-left' : "10px",
+								'padding-left' : "25px",
 								'background-color':  '#CCCCCC'
 							}
 						}
 					]
+				},
+				// container for FOUR IMAGES (included at items property) 
+				{ 
+					xtype: 'container',
+					itemId: 'layers',
+					layout: 'column',
+					style: {
+						'float': 'right'
+					},
+					listeners: {
+						'afterrender' : function(comp){
+								Ext.getCmp(comp.id).ownerCt.el.on('mouseleave', function(evt, el, o){
+										Ext.getCmp(comp.id).ownerCt.getComponent('layerMain').items.items[0].el.fadeOut({
+																	endOpacity: 0.9,
+																	duration: 0.05
+										});
+										var elementsContainer = Ext.getCmp(comp.id);
+										elementsContainer.hide();
+							});
+						}
+					},
+					items: items
 				}
+				
 			]
 		};
 		return row;
@@ -197,10 +222,11 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 			autoShow : true,
 			width: 110,
 			hidden: true,
+			itemId: this.elementid(),
 			items: [
 				{
 					xtype: 'box',
-					autoShow : true,
+					//autoShow : true,
 					autoEl: {
 						tag: 'img',
 						src: imgPath
@@ -214,36 +240,57 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 					listeners: {
 						'afterrender' : function(comp){
 							comp.el.on('mouseover', function(a,imageElement,obj){
-								Ext.getCmp('subcontainer_caja_4_1').items.items[0].el.setStyle('padding: 0px');
-								Ext.getCmp('subcontainer_caja_4_1').items.items[0].el.setWidth(110);
+								comp.ownerCt.items.items[0].el.setStyle('padding', '0px');
+								comp.ownerCt.items.items[0].el.setWidth(110);
+								comp.ownerCt.items.items[1].el.setWidth(110);	
 							});
 							comp.el.on('mouseout', function(a,imageElement,obj){
-								Ext.getCmp('subcontainer_caja_4_1').items.items[0].el.setWidth(90);
-							});
-											
-							comp.el.on('click', function(){
-								this.highlight();
-							});
+								comp.ownerCt.items.items[0].el.setWidth(100);
+								comp.ownerCt.items.items[1].el.setWidth(100);
+							});						
+							comp.el.on('click', function(evt,target,obj){
+									var elInfo = Ext.getCmp(target.id).ownerCt.elementItemsInfo;
+									if(!elInfo.activ ){
+										elInfo.activ = true;
+										this.el.setOpacity(0.25); 
+										//map.events.register('addlayer', map, function(){ console.log('added layer'); });
+										addLayerToTree(elInfo.server,elInfo.layer);
+									} else {
+										elInfo.activ = false;
+										this.el.setOpacity(1.); 
+										//map.events.register('removelayer', map, function(){ console.log('deleted layer'); });
+										var layerObject = map.getLayer("OL_WMS_addedLayer_" + elInfo.layer);
+										removeLayerToTree(layerObject);
+									}
+							}, this, {delay: 1200});
 						}
 					}
 				},
 				{
 					xtype: 'box',
-					autoShow : true,
-					autoHeight: true,
-					layout: 'fit', 
+					width: 100, 
 					// http://www.sencha.com/forum/showthread.php?79107-Problem-removing-panel-border
 					autoEl: {
 						tag: 'div',
-						html: title
+						html: '<B>' + title + '</B>'
 					}, 
 					style: {
-						'padding-left' : "25px"
+						'padding-left' : "15px", 
+						'border'  : '2px solid',
+						'background-color': '#F7F8E0'
 					}	
 				}
 			]
 			};
 		return element;
+	},
+	// private: extract info for clicked container: the server which is providing layers and the name of the layer corresponding to that element
+	getElementItemsInfo: function(serverURL, layerName, activ){
+		return {
+				server: serverURL,
+				layer: layerName, 
+				activ: false  // parameter to control if layers is added (true) or not (false)
+				};
 	},
 	// private
 	onRender: function(ct, position){
