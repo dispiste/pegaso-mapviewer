@@ -18,10 +18,11 @@ Ext.onReady(function() {
 			}, 1000);
 
 	initMapPanel();
+	initLeftTabs();
 	returnActiveLayersII(); // function to return active layers according to visible layers in treePanel
 	initSearchTools();
 	initFeaturedLayers();
-	initLeftTabs();
+	
 	initInfoByPoint();
 	initToolbar();
 	
