@@ -9,7 +9,7 @@
 var map; 
 var mapPanel;
 var activeLayers; // activated layers controled from treePanel visibility
-
+ 
 
 /**
  *  TreePanel actions
@@ -17,8 +17,12 @@ var activeLayers; // activated layers controled from treePanel visibility
  
 
 function initMapPanel() {
+
+	
 	
 	Ext.onReady(function(){
+	
+	
 	
 	// set a permalink provider
     var permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
@@ -217,6 +221,13 @@ function initMapPanel() {
 	]); 
 	
 	
+	// We defined an anonymous function that register 'removelayer' event for map 
+	// By being executed it returns the deleted layer 
+	(function(){
+		map.events.register('removelayer', map, function(lay){ 
+									var deletedLayerName = lay.layer.name; 
+			 });
+	})();
 	
 	
 	var onStatechange = function(provider){
@@ -245,7 +256,7 @@ function initMapPanel() {
 		split: true, 
 		plugins:[] // important in order to add dyncamically  plugins once a panel is instantiated
 	});
-	
+
 	/*
 	var permalink = new OpenLayers.Control.Permalink();
 	map.addControl(permalink);
@@ -269,7 +280,6 @@ function returnActiveLayersWithClone() {
 									// if the layer isn't visible at this range, or is turned off, skip it
 									var layer = map.layers[layername];
 											if (layer.visibility) {
-													//console.log(layer);
 													var layercl = layer.clone();
 													var layerDiv_cl = layer.div.cloneNode(true);
 													layercl.div = layerDiv_cl;

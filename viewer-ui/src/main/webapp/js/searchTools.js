@@ -13,30 +13,33 @@
  
 var comboGeo;
 var geocoder;
+var locationLayer; 
 
 function initSearchTools() {
 	
-	// para utilizar la API Geocoding de Google, hay que incluir la ruta 
+	// To make use of the Google Geocoding API, this URL path in the main file must be included: 
 	// <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>  
-	// en el fichero principal
     geocoder = new google.maps.Geocoder();
-    var locationLayer = new OpenLayers.Layer.Vector("Location", {
+    locationLayer = new OpenLayers.Layer.Vector("Location", {
         styleMap: new OpenLayers.Style({	
 			// look at: http://dev.openlayers.org/docs/files/OpenLayers/Symbolizer/Point-js.html
             externalGraphic: "http://openlayers.org/api/img/marker.png", // to render points 
+		  //  externalGraphic: "../img/marker.png", 
             graphicYOffset: -25, 
             graphicHeight: 25,
             graphicTitle: "${formatted_address}"
         })
     });
 
+	//mapPanel.map.addLayer(locationLayer); 
+	
 	comboGeo = new GeoExt.form.GeocoderComboBox({
        map: mapPanel.map,
 	  //id: 'caca',
        zoom: 8,
 	   //width: 400,
        //renderTo: 'searchtool',
-	   // vector layer is referred to one that contains marker to show wished location 
+	   // vector layer is referred to one that contains marker showing our wished location 
 	   layer: locationLayer,
        displayField: "formatted_address",
        store: new Ext.data.JsonStore({
