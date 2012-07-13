@@ -1,30 +1,5 @@
 Ext.namespace("UAB", "UAB.feat");
 
-// add a layer to the map by clicking on the corresponding image (items) accordingly to server URL and layer name
-	var addLayerToTree = function(serverURL,layerName){
-		var addedLayer = new OpenLayers.Layer.WMS(layerName.replace(/_/g, " "),
-											  serverURL, 
-											  {
-												layers: layerName,
-												transparent: true,
-												format: "image/png"
-											  }, {
-												isBaseLayer: false,
-												buffer: 0,
-												visibility: true
-											  }
-											);
-		addedLayer.id = "OL_WMS_addedLayer_" + layerName;
-		map.addLayer(addedLayer);
-		Ext.Msg.alert('Featured Layers', 'You have added ' + layerName.replace(/_/g, " ") + ' layer successfully !');
-	};
-	
-// remove a layer to the map by clicking on the corresponding image (items) accordingly to server URL and layer name
-	var removeLayerToTree = function(layerObj){
-		map.removeLayer(layerObj);
-		Ext.Msg.alert('Featured Layers', 'You have removed ' + layerObj.name + ' layer successfully !');
-	};	
-
 /**
  * @class Uab.feat.FeaturedLayers.js
  * @extends Ext.Panel
@@ -79,6 +54,13 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
      * @property elementItemsInfo  
 	*/
 	elementItemsInfo: null,	
+	/**
+	 * A property to read an OpenLayers object showing active layers (layers belonging to the Featured-Layer Panel and added to map by clicking on the corresponded image). 
+	 * Read-only.
+     * @type OpenLayers Object
+     * @property activeLayers  
+	*/
+	activeLayers: {},
 	constructor: function(config) {
 		config = config || {};
 		config.ownerButton || console.log("The 'ownerButton' config parameter is required");
@@ -88,10 +70,12 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 		config.height = config.height || this.fixedHeight;
 		config.bodyStyle = 'background:transparent;';
 		UAB.feat.FeaturedLayers.superclass.constructor.call(this, config);
+		map.events.register('removelayer', this, this.onLayerRemove);
 		this.buildUI();
 	},
 	buildUI: function() {
 		var categories = this.categories;
+		this.layerStatus = {};
 		var rows = [];
 		for (var i=0; i<categories.length; i++) {
 			var category = categories[i];
@@ -101,7 +85,7 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 			for (var j=0; j<category.items.length; j++) {
 				var item = category.items[j];
 				var element = this.getElement(item.text, item.imgPath); // returns an Ext Container
-				element.elementItemsInfo = this.getElementItemsInfo(item.server,item.layer,item.activ);		
+				element.elementItemsInfo = this.getElementItemsInfo(item.text, item.server,item.layer,item.activ);		
 				items.push(element); 
 			};
 			var row = this.getRow(category.text, category.imgPath, items);
@@ -238,31 +222,38 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 					},
 					autoWidth: true,
 					listeners: {
-						'afterrender' : function(comp){
-							comp.el.on('mouseover', function(a,imageElement,obj){
-								comp.ownerCt.items.items[0].el.setStyle('padding', '0px');
-								comp.ownerCt.items.items[0].el.setWidth(110);
-								comp.ownerCt.items.items[1].el.setWidth(110);	
-							});
-							comp.el.on('mouseout', function(a,imageElement,obj){
-								comp.ownerCt.items.items[0].el.setWidth(100);
-								comp.ownerCt.items.items[1].el.setWidth(100);
-							});						
-							comp.el.on('click', function(evt,target,obj){
-									var elInfo = Ext.getCmp(target.id).ownerCt.elementItemsInfo;
-									if(!elInfo.activ ){
-										elInfo.activ = true;
-										this.el.setOpacity(0.25); 
-										//map.events.register('addlayer', map, function(){ console.log('added layer'); });
-										addLayerToTree(elInfo.server,elInfo.layer);
-									} else {
-										elInfo.activ = false;
-										this.el.setOpacity(1.); 
-										//map.events.register('removelayer', map, function(){ console.log('deleted layer'); });
-										var layerObject = map.getLayer("OL_WMS_addedLayer_" + elInfo.layer);
-										removeLayerToTree(layerObject);
-									}
-							}, this, {delay: 1200});
+						'afterrender' : {
+							fn: function(comp){
+								comp.el.on('mouseover', function(a,imageElement,obj){
+									comp.ownerCt.items.items[0].el.setStyle('padding', '0px');
+									comp.ownerCt.items.items[0].el.setWidth(110);
+									comp.ownerCt.items.items[1].el.setWidth(110);	
+								});
+								comp.el.on('mouseout', function(a,imageElement,obj){
+									comp.ownerCt.items.items[0].el.setWidth(100);
+									comp.ownerCt.items.items[1].el.setWidth(100);
+								});						
+								comp.el.on('click', function(evt,target, obj){
+										var elInfo = Ext.getCmp(target.id).ownerCt.elementItemsInfo;
+										var component = Ext.get(target.id);
+										if(!elInfo.activ ){
+											elInfo.activ = true;
+											elInfo.el = component;
+											component.setOpacity(0.25); 
+											this.addLayerToTree(elInfo);
+											this.activeLayers[elInfo.id] = elInfo;
+										} else {
+											elInfo.activ = false;
+											Ext.get(target.id).setOpacity(1.); 
+											var layerObject = map.getLayer(elInfo.id);
+											this.removeLayerFromFLPanel(layerObject);
+											delete this.activeLayers[elInfo.id];
+											
+											 
+										}
+								}, this, {delay: 1200})
+							},
+							scope: this
 						}
 					}
 				},
@@ -285,8 +276,9 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 		return element;
 	},
 	// private: extract info for clicked container: the server which is providing layers and the name of the layer corresponding to that element
-	getElementItemsInfo: function(serverURL, layerName, activ){
+	getElementItemsInfo: function(layerTitle, serverURL, layerName, activ){
 		return {
+				title: layerTitle, 
 				server: serverURL,
 				layer: layerName, 
 				activ: false  // parameter to control if layers is added (true) or not (false)
@@ -299,6 +291,36 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 			var x = this.ownerButton.el.getXY()[0]-this.fixedWidth+this.ownerButton.el.getWidth();
 			var y = this.ownerButton.el.getXY()[1]+this.ownerButton.el.getHeight();
 			this.getEl().setXY([x,y]); // just under position of "Featured Layers" button
+		}
+	},
+	// private: add a layer to the map by clicking on the corresponding image (items) accordingly to server URL and layer name
+	addLayerToTree: function(elInfo){
+		var addedLayer = new OpenLayers.Layer.WMS(elInfo.title, 
+											  elInfo.server, 
+											  {
+												layers: elInfo.layer,
+												transparent: true,
+												format: "image/png"
+											  }, {
+												isBaseLayer: false,
+												buffer: 0,
+												visibility: true
+											  }
+											);
+		elInfo.id = addedLayer.id;
+		mapPanel.map.addLayer(addedLayer);
+	}, 
+	// private: remove a layer to the map by clicking on the corresponding image (items) accordingly to server URL and layer name
+	removeLayerFromFLPanel : function(layerObj){
+		map.removeLayer(layerObj);
+	},	
+	onLayerRemove: function(evt){
+		var layerId = evt.layer.id;
+		var elInfo = this.activeLayers[layerId];
+		if (elInfo) {
+			delete this.activeLayers[layerId];
+			elInfo.activ = false;
+			elInfo.el.setOpacity(1.);
 		}
 	},
 	// private: counter to reference internal components
