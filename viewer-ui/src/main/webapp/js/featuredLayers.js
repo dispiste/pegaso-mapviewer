@@ -17,10 +17,15 @@ function FadeOutComps(comp1,comp2, opacity) {
 };
 	
 
+
+	
 	
 function initFeaturedLayers() {	
 	// This button is added to the toolbar of the application, defined at infoByPoint.js file. When adding, it is consequently renderized
 	// Ext.get('botonExtJS') returns null
+	
+	
+	
 	
 	botonFL = new Ext.Button({
 						id: 'botonExtJS',
@@ -38,19 +43,19 @@ function initFeaturedLayers() {
 													text: 'Layers 1',
 													imgPath: "img/featuredLayers/imagen_1.png",
 													items: [{
-														text: 'NAME 1',
+														text: 'Corine 1990 100m',
 														imgPath: "img/featuredLayers/Case_1.png",
 														server: "http://pegasosdi.uab.es/ogc/wms?", 
 														layer: "CORINE_CLC90_100m"
 													},
 													{
-														text: 'NAME 2',
+														text: 'Corine 2000 100m',
 														imgPath: "img/featuredLayers/Case_2.png",
 														server: "http://pegasosdi.uab.es/ogc/wms?", 
 														layer: "CORINE_CLC00_100m"
 													},
 													{
-														text: 'NAME 3',
+														text: 'Corine 2006 100m',
 														imgPath: "img/featuredLayers/Case_3.png",
 														server: "http://pegasosdi.uab.es/ogc/wms?", 
 														layer: "CORINE_CLC06_100m"
