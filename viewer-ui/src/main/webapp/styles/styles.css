@@ -89,12 +89,12 @@ div.mainPegasoLogo {
   width: 16 px !important;
 }
 .botonZoomIn{
-  background-image:url(../img/icon_zoomIn16.png) !important; 
+  background-image:url(../img/icon_zoomin16.png) !important; 
   height:16 px !important;
   width: 16 px !important;
 }
 .botonZoomOut{
-  background-image:url(../img/icon_zoomOut16.png) !important; 
+  background-image:url(../img/icon_zoomout16.png) !important; 
   height:16 px !important;
   width: 16 px !important;
 }
