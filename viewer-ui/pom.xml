@@ -1,23 +1,96 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>cat.uab.pegaso-project</groupId>
-  <artifactId>mapviewer-ui</artifactId>
-  <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>Pegaso Map Viewer UI</name>
-  <description>The Pegaso Map Viewer, including map visualization and integration with Pegaso Data Catalog</description>
-  <url>https://github.com/dispiste/pegaso-mapviewer</url>
-
-
-
-
-  <properties>
-    <mapviewer-ui.webapp.dir>${basedir}/src/main/webapp</mapviewer-ui.webapp.dir>
-    <mapviewer-ui.webapp.js.dir>${mapviewer-ui.webapp.dir}/js</mapviewer-ui.webapp.js.dir>
-    <mapviewer-ui.build.dir>${project.build.directory}/${project.build.finalName}</mapviewer-ui.build.dir>
-    <mapviewer-ui.webapp.css.dir>${mapviewer-ui.webapp.dir}/css</mapviewer-ui.webapp.css.dir>
-    <minify.verbose>false</minify.verbose>
-  </properties>
-
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cat.uab.pegaso-project</groupId>
+	<artifactId>mapviewer-ui</artifactId>
+	<packaging>war</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>Pegaso Map Viewer UI</name>
+	<description>The Pegaso Map Viewer, including map visualization and integration with Pegaso Data Catalog</description>
+	<url>https://github.com/dispiste/pegaso-mapviewer</url>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<warSourceExcludes>
+						externals/ext-3.4.0/ext-all-debug.js,
+						externals/ext-3.4.0/ext-all-debug-w-comments.js,
+						externals/ext-3.4.0/adapter/jquery/**,
+						externals/ext-3.4.0/adapter/prototype/**,
+						externals/ext-3.4.0/adapter/yui/**,
+						externals/ext-3.4.0/docs/**,
+						externals/ext-3.4.0/examples/**,
+						externals/ext-3.4.0/src/**,
+						externals/ext-3.4.0/test/**,
+						externals/ext-3.4.0/welcome/**,
+						externals/OpenLayers-2.12/apidoc_config/**,
+						externals/OpenLayers-2.12/art/**,
+						externals/OpenLayers-2.12/build/**,
+						externals/OpenLayers-2.12/doc/**,
+						externals/OpenLayers-2.12/doc_config/**,
+						externals/OpenLayers-2.12/examples/**,
+						externals/OpenLayers-2.12/lib/**,
+						externals/OpenLayers-2.12/notes/**,
+						externals/OpenLayers-2.12/tests/**,
+						externals/OpenLayers-2.12/tools/**,
+						externals/OpenLayers-2.12/OpenLayers?*.js,
+						externals/GeoExt-1.10/docs/**,
+						externals/GeoExt-1.10/examples/**</warSourceExcludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.samaxes.maven</groupId>
+				<artifactId>maven-minify-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<id>default-minify</id>
+						<phase>process-resources</phase>
+						<configuration>
+							<cssSourceDir>styles</cssSourceDir>
+							<cssSourceFiles>
+								<param>styles.css</param>
+								<param>css_scalebar/scalebar-thin.css</param>
+							</cssSourceFiles>
+							<jsSourceFiles>
+								<param>main.js</param>
+								<param>leftTabs.js</param>
+								<param>map.js</param>
+								<param>scaleBar.js</param>
+								<param>searchTools.js</param>
+								<param>CSW/CSWSearchField.js</param>
+								<param>CSW/CustomCSWRecordsReader.js</param>
+								<param>feat/FeaturedLayers.js</param>
+								<param>CSW/CustomCSWRecordsReader.js</param>
+								<param>infotool/InfoAction.js</param>
+								<param>tree/CustomTreePanel.js</param>
+							</jsSourceFiles>
+							<!-- 
+							<jsSourceIncludes>
+								<jsSourceInclude**</jsSourceInclude>
+							</jsSourceIncludes>-->
+							<!--
+							<jsSourceExcludes>
+								<jsSourceExclude>map_print_good.js</jsSourceExclude>
+							</jsSourceExcludes> -->
+						</configuration>
+						<goals>
+							<goal>minify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<properties>
+		<mapviewer-ui.webapp.dir>${basedir}/src/main/webapp</mapviewer-ui.webapp.dir>
+		<mapviewer-ui.webapp.js.dir>${mapviewer-ui.webapp.dir}/js</mapviewer-ui.webapp.js.dir>
+		<mapviewer-ui.build.dir>${project.build.directory}/${project.build.finalName}</mapviewer-ui.build.dir>
+		<mapviewer-ui.webapp.css.dir>${mapviewer-ui.webapp.dir}/css</mapviewer-ui.webapp.css.dir>
+		<minify.verbose>false</minify.verbose>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 </project>
