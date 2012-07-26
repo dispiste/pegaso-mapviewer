@@ -103,7 +103,8 @@ Ext.extend(UAB.csw.CustomCSWRecordsReader, Ext.data.JsonReader, {
         		value = record.data.URI;
         		if (value instanceof Array) {
                     for (var i=0, ii=value.length; i<ii; ++i) {
-                    	if (value[i].protocol.search("OGC:WMS.*")>=0) {
+                    	if (value[i].protocol
+                    			&& value[i].protocol.search("OGC:WMS.*")>=0) {
                     		record.data.wmsurl = value[i].value;
                     		record.data.wmslayers = value[i].name;
                     	}
