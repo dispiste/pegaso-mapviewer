@@ -11,7 +11,7 @@
 
 Ext.onReady(function() {
 	// The proxy is necessary for WMSGetFeatureInfo or CSW queries to servers different than localhost (e.g. GetFeatureInfo for VLIZ layers)
-	OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
+	OpenLayers.ProxyHost = "/cgi-bin/olproxy.cgi?url=";
 	
 	setTimeout(function() {
 		Ext.get('loading').fadeOut({
