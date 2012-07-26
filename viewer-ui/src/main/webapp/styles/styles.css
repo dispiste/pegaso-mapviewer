@@ -302,3 +302,100 @@ background-image:url(../img/plus.png) !important;
 }
 
 .uab-layer-window-body { background:#fff !important; }
+
+/**
+ * 	Featured layers component
+ */
+.uab-icon-featuredLayers2 {
+	height: 100px;
+	width: 100px;
+}
+
+.uab-label-featuredLayers2 {
+	height: 36px;
+	width: 96px;
+	background-color:  #CCCCCC;
+	overflow: hidden;
+	padding: 2px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.uab-element-featured-layers2 {
+	background-color: #FFFFFF;
+	margin: 2px;
+	width: 100px;
+	height: 136px;
+	border-radius: 8px;
+}
+
+.uab-element-featured-layers-selected {
+	border-color: red;
+	border-width: 1px;
+}
+
+.uab-icon-featuredLayers{
+	height: 100px;
+	width: 100px;
+}
+
+.uab-label-featuredLayers {
+	height: 36px;
+	width: 96px;
+	background-color:  #CCCCCC;
+	overflow: hidden;
+	padding: 2px;
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+}
+
+
+.uab-element-featured-layers {
+	padding: 0px;
+	margin-right: 2px;
+	background-color: #FFFFFF;
+	width: 100px;
+	height: 140px;
+}
+
+.uab-row-featured-layers {
+	padding: 0px;
+	/*padding-left: 2px;*/
+}
+
+
+
+.uab-icon-featuredLayers3 {
+	height: 100px;
+	width: 100px;
+	/*padding-bottom : 2px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 2px;
+	*/
+}
+
+.uab-label-featuredLayers3 {
+	height: 36px;
+	width: 96px;
+	background-color:  #CCCCCC;
+	overflow: hidden;
+	padding: 2px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.uab-element-featured-layers3 {
+	padding: 0px;
+	margin-right: 2px;
+	background-color: #FFFFFF;
+	width: 100px;
+	height: 136px;
+}
+
+.uab-row-featured-layers3 {
+	padding: 0px;
+	background-color: #FFFFFF;
+	/*padding-left: 2px;*/
+}

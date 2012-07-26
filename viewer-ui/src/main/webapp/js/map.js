@@ -9,10 +9,8 @@
 var map; 
 var mapPanel;
 var activeLayers; // activated layers controled from treePanel visibility
- 
 
 function initMapPanel() {
-	
 	var options = {
 		sphericalMercator: true,
 		projection: new OpenLayers.Projection("EPSG:900913"),
@@ -213,7 +211,7 @@ function initMapPanel() {
 	map.addControls([panPanelCtrl,zoomPanelCtrl]);
 
 
-	var botonFL = new Ext.Button({
+	var buttonFL = new Ext.Button({
 		id: 'botonExtJS',
 		text: 'Featured Layers', 
 		enableToggle: true,
@@ -228,7 +226,7 @@ function initMapPanel() {
 					btn.featuredLayersContainer = new UAB.feat.FeaturedLayers(config);
 				}
 				// we render to document body but we add a listener to be appeared (as DOM element) at some position on the screen 
-				btn.featuredLayersContainer.render(document.body); 
+				btn.featuredLayersContainer.render(document.body);
 				btn.featuredLayersContainer.doLayout();
 				btn.featuredLayersContainer.getEl().slideIn('t', {
 					easing: 'easeBoth',
@@ -266,7 +264,7 @@ function initMapPanel() {
 			btnPrintClient ,
 			'->',
 			//btnPermalink,
-			botonFL
+			buttonFL
 		],
 		plugins:[] // important in order to add dyncamically  plugins once a panel is instantiated
 	});
@@ -280,7 +278,6 @@ function returnActiveLayersWithClone() {
 									// if the layer isn't visible at this range, or is turned off, skip it
 									var layer = map.layers[layername];
 											if (layer.visibility) {
-													//console.log(layer);
 													var layercl = layer.clone();
 													var layerDiv_cl = layer.div.cloneNode(true);
 													layercl.div = layerDiv_cl;

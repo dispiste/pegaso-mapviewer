@@ -20,10 +20,10 @@ Ext.onReady(function() {
 	}, 500);
 
 	initMapPanel();
+	initLeftTabs();
 	returnActiveLayersII(); // function to return active layers according to visible layers in treePanel
 	initSearchTools();
-	initLeftTabs();
-	
+
 	new Ext.Viewport({
 		layout: "border",
 		defaults: {border: false},

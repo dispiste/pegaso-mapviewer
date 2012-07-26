@@ -374,26 +374,82 @@ App.config.layers = [
 
 App.config.featuredLayers = [
 	{
-		text: 'Layers 1',
-		imgPath: "img/featuredLayers/imagen_1.png",
+		text: 'Administrative Boundaries',
+		imgPath: 'img/featuredLayers/australia.png',
 		items: [{
-			text: 'NAME 1',
-			imgPath: "img/featuredLayers/Case_1.png",
-			type: 'WMS',
-			url: 'http://pegasosdi.uab.es/ogc/wms?',
-			layers: 'CORINE_CLC06_100m'
+			text: "NUTS 2010 1:3M",
+			imgPath: 'img/featuredLayers/europe4.png',
+			server: 'http://pegasosdi.uab.es/ogc/wms?',
+			layers: 'NUTS2010'
 		},
 		{
-			text: 'Corine Land Cover',
-			imgPath: "img/featuredLayers/Case_2.png",
-			type: 'WMS',
-			url: 'http://pegasosdi.uab.es/ogc/wms?',
-			layers: 'CORINE_CLC00_100m'
+			text: "Marbound EEZs, version 6",
+			imgPath: 'img/featuredLayers/boat.png',
+			server: 'http://geo.vliz.be/geoserver/wms?',
+			layers: 'Marbound:boundaries'
+		},
+		{
+			text: "IHO Sea Areas",
+			imgPath: 'img/featuredLayers/johnny_automatic_whale_icon.png',
+			server: 'http://geo.vliz.be/geoserver/wms?',
+			layers: 'Marbound:iho'
 		}]
 	},
 	{
+		text: 'Protected Areas',
+		imgPath: "img/featuredLayers/tree.png",
+		items: [{
+			text: 'NATURA 2000 areas',
+			imgPath: "img/featuredLayers/nature-sunflower.png",
+			type: 'WMS',
+			server: 'http://pegasosdi.uab.es/ogc/wms?',
+			layers: 'NATURA2000'
+		}]
+	},
+	{
+		text: 'Land Cover',
+		imgPath: "img/featuredLayers/sicilia.png",
+		items: [{
+			text: 'Corine Land Cover 2006',
+			imgPath: "img/featuredLayers/eaa_clc06.png",
+			type: 'WMS',
+			server: 'http://pegasosdi.uab.es/ogc/wms?',
+			layers: 'CORINE_CLC06_100m'
+		},
+		{
+			text: 'Corine Land Cover 2000',
+			imgPath: "img/featuredLayers/eaa_clc00.png",
+			type: 'WMS',
+			server: 'http://pegasosdi.uab.es/ogc/wms?',
+			layers: 'CORINE_CLC00_100m'
+		},
+		{
+			text: 'Corine Land Cover 1990',
+			imgPath: "img/featuredLayers/eaa_clc90.png",
+			type: 'WMS',
+			server: 'http://pegasosdi.uab.es/ogc/wms?',
+			layers: 'CORINE_CLC90_100m'
+		},
+		{
+			text: 'GlobCorine 2009',
+			imgPath: "img/featuredLayers/esa_globcorine2009.png",
+			type: 'WMS',
+			server: 'http://pegasosdi.uab.es/ogc/wms?',
+			layers: 'GLOBCORINE_2009'
+		},
+		{
+			text: 'GlobCorine 2005',
+			imgPath: "img/featuredLayers/esa_globcorine2005.png",
+			type: 'WMS',
+			server: 'http://pegasosdi.uab.es/ogc/wms?',
+			layers: 'GLOBCORINE_2005'
+		}]
+		
+	},
+	{
 		text: 'Indicators',
-		imgPath: "img/featuredLayers/imagen_2.png",
+		imgPath: "img/featuredLayers/pegaso-round.png",
 		items: []
 	}
+	
 ];
