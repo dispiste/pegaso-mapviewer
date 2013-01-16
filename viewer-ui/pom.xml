@@ -16,7 +16,6 @@
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<warSourceExcludes>
-						externals/ext-3.4.0/ext-all-debug.js,
 						externals/ext-3.4.0/ext-all-debug-w-comments.js,
 						externals/ext-3.4.0/adapter/jquery/**,
 						externals/ext-3.4.0/adapter/prototype/**,
