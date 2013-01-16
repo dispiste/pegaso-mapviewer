@@ -1,6 +1,9 @@
 Ext.namespace("App");
 
 App.config = {};
+App.config.csw = {
+	queryUrl: "http://pegasosdi.uab.es/catalog/srv/en/csw"
+};
 
 App.config.featureInfo = {};
 
@@ -380,19 +383,25 @@ App.config.featuredLayers = [
 			text: "NUTS 2010 1:3M",
 			imgPath: 'img/featuredLayers/europe4.png',
 			server: 'http://pegasosdi.uab.es/ogc/wms?',
-			layers: 'NUTS2010'
+			layers: 'NUTS2010gr'
 		},
 		{
-			text: "Marbound EEZs, version 6",
+			text: "Marbound EEZs, version 7",
 			imgPath: 'img/featuredLayers/boat.png',
 			server: 'http://geo.vliz.be/geoserver/wms?',
-			layers: 'Marbound:boundaries'
+			layers: 'MarineRegions:eez'
+		},
+		{
+			text: "Maritime boundaries, v7",
+			imgPath: 'img/featuredLayers/sailboat.png',
+			server: 'http://geo.vliz.be/geoserver/wms?',
+			layers: 'MarineRegions:boundaries'
 		},
 		{
 			text: "IHO Sea Areas",
 			imgPath: 'img/featuredLayers/johnny_automatic_whale_icon.png',
 			server: 'http://geo.vliz.be/geoserver/wms?',
-			layers: 'Marbound:iho'
+			layers: 'MarineRegions:iho'
 		}]
 	},
 	{

@@ -76,7 +76,7 @@ function initSearchTools() {
 
 	var cswconfig = {
 		map: mapPanel.map,
-		queryUrl: "http://pegasosdi.uab.es/catalog/srv/en/csw"
+		queryUrl: App.config.csw.queryUrl
 	} 
 	var loadLayers = new UAB.csw.CSWSearchField(cswconfig);
 	// TODO: loadByProvider has not been implemented yet
