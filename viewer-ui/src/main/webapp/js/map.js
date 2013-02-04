@@ -172,6 +172,7 @@ function initMapPanel() {
 		}
 	});
 	
+	
 	//////////////////////////
 	// OVERVIEW MAP CONTROL //
 	//////////////////////////
@@ -211,6 +212,38 @@ function initMapPanel() {
 	map.addControls([panPanelCtrl,zoomPanelCtrl]);
 
 
+	
+	// DISTANCE AND AREA MEASURE TOOLS
+	
+	map.addControl(lineMeasure);
+	map.addControl(polygonMeasure);
+	
+	var btnDistanceMeasure = new GeoExt.Action({
+									map: map,
+									enableToggle: true,
+									control: lineMeasure, 
+									layout: 'form',
+									tooltip: "Measure distances on map",
+									iconCls: "btnDistanceMeasure",
+									toggleGroup: 'groupToggleButtons',  
+									activateOnEnable: true, 
+									deactivateOnDisable: true
+	});
+
+	
+	var btnAreaMeasure = new GeoExt.Action({
+									map: map,
+									enableToggle: true,
+									control: polygonMeasure, 
+									layout: 'form',
+									tooltip: "Measure areas on map",
+									iconCls: "btnAreaMeasure",
+									toggleGroup: 'groupToggleButtons',  
+									activateOnEnable: true, 
+									deactivateOnDisable: true
+	});
+	
+	
 	var buttonFL = new Ext.Button({
 		id: 'botonExtJS',
 		text: 'Featured Layers', 
@@ -261,7 +294,9 @@ function initMapPanel() {
 			btnPrev,
 			btnPost,
 			btnZoomFullExtent, 
-			btnPrintClient ,
+			btnPrintClient,
+			btnDistanceMeasure,
+			btnAreaMeasure,
 			'->',
 			//btnPermalink,
 			buttonFL
