@@ -123,6 +123,16 @@ background-image:url(../img/plus.png) !important;
   height:16 px !important;
   width: 16 px !important;
 }
+.btnDistanceMeasure{
+  background-image:url(../img/distance_measure.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
+.btnAreaMeasure{
+  background-image:url(../img/area_measure.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
 
 /**
  *     CSW client styles
