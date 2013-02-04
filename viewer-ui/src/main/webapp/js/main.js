@@ -19,10 +19,12 @@ Ext.onReady(function() {
 		});
 	}, 500);
 
+	initMeasureTools();
 	initMapPanel();
 	initLeftTabs();
 	returnActiveLayersII(); // function to return active layers according to visible layers in treePanel
 	initSearchTools();
+
 
 	new Ext.Viewport({
 		layout: "border",
