@@ -295,6 +295,7 @@ function initMapPanel() {
 			btnPost,
 			btnZoomFullExtent, 
 			btnPrintClient,
+			'-',
 			btnDistanceMeasure,
 			btnAreaMeasure,
 			'->',
