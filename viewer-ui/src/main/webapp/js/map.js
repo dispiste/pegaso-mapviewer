@@ -173,23 +173,31 @@ function initMapPanel() {
 	});
 	
 	
+	
 	//////////////////////////
 	// OVERVIEW MAP CONTROL //
 	//////////////////////////
-			
+	// TO IMPROVE: It seems that maximized: false gives bad extension for overviewmap
+	
+	var lyrOverview1 = map.layers[1].clone();	
+	var lyrOverview2 = map.layers[9].clone();
+	
 	var optionsOverviewMap = {
 		id: 'overvMap',
 		minRatio: 16, 
 		maxRatio: 64, 
-		maximized: false,
+		maximized: true,
+		maximizeTitle: 'Show the overview map',
+        minimizeTitle: 'Hide the overview map',
 		mapOptions: {
 			// See the effect by searching a location in search tab and take a look at red box in the overviewmap
-			 numZoomLevels: 3
+			numZoomLevels: 6, 
+			layers: [lyrOverview1,lyrOverview2],
+			maxResolution: "auto"
 		}
 	};
-
+	
 	map.addControl(new OpenLayers.Control.OverviewMap(optionsOverviewMap));
-
 	
 	//////////////////////////
 	// SCALE BAR            // TAKE A LOOK AT: http://dev.openlayers.org/addins/scalebar/trunk/examples/scalebar.html
