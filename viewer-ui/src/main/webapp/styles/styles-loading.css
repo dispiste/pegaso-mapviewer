@@ -27,3 +27,18 @@
   text-align: center;
   height:     auto;
 }
+
+/* 
+ styles for Loading progressive bar
+*/
+.olControlLoadingPanel {
+            background-image:url(../img/loading_layer.gif);
+            margin-left: 40%;
+            margin-top: 25%;
+            position: relative;
+            width: 195px;
+            height: 11px;
+            background-position:center;
+            background-repeat:no-repeat;
+            display: none;
+}
