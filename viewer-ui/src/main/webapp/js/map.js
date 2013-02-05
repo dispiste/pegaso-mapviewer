@@ -206,6 +206,12 @@ function initMapPanel() {
 	//map.addControl(scaleLinea); 
 	map.addControl(scaleBar); 
 	
+	//
+	// LOADING PROGRESSIVE BAR
+	// to show a progress bar when loading a layer 
+	//
+	map.addControl(new OpenLayers.Control.LoadingPanel({}));
+	
 	var panPanelCtrl = new OpenLayers.Control.PanPanel();
 	var zoomPanelCtrl = new OpenLayers.Control.PanZoom();
 	
