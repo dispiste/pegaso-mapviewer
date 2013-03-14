@@ -2,7 +2,7 @@ Ext.namespace("App");
 
 App.config = {};
 App.config.csw = {
-	queryUrl: "http://pegasosdi.uab.es/catalog/srv/en/csw"
+	queryUrl: document.location.protocol + "//pegasosdi.uab.es/catalog/srv/en/csw"
 };
 
 App.config.featureInfo = {};
@@ -287,30 +287,6 @@ App.config.layers = [
 			visibility : false
 		}
 	),
-	/*
-	new OpenLayers.Layer.WMS("Grid 1km ETRS89 LAEA",
-		 "http://pegasosdi.uab.es/ogc/wms?",
-		 {
-		 	layers: "Mediterranean_and_Black_Seas",
-		 	transparent: true,
-		 	format: "image/png"
-		 }, {
-		 	isBaseLayer: false,
-		 	buffer: 0,
-		 	visibility: false
-		 }
-	),*/
-	new OpenLayers.Layer.WMS("Country Boundaries 2006",
-		"http://pegasosdi.uab.es/ogc/wms?",
-		{
-			layers : "CNTR_BN_03M_2006",
-			transparent : true,
-			format : "image/png"
-		}, {
-			isBaseLayer : false,
-			buffer : 0
-		}
-	),
 	new OpenLayers.Layer.WMS("Country Boundaries 2010",
 		"http://pegasosdi.uab.es/ogc/wms?",
 		{
@@ -413,6 +389,13 @@ App.config.featuredLayers = [
 			type: 'WMS',
 			server: 'http://pegasosdi.uab.es/ogc/wms?',
 			layers: 'NATURA2000'
+		},
+		{
+			text: 'Ramsar Wetlands',
+			imgPath: "img/featuredLayers/bluebird.png",
+			type: 'WMS',
+			server: 'http://pegasosdi.uab.es/ogc/wms?',
+			layers: 'Wetlands_Boundaries,Wetlands_points'
 		}]
 	},
 	{
