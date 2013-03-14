@@ -1,6 +1,11 @@
 ICONS:
 
-** Pins icons were derived from "pins-by-doofi" image downloaded      from OpenClipart.org. It was created by doofi and it is on the public domain:
+Unless stated differently, icons used in the project come from OpenClipart.org and are in the public domain.
+
+** Pins icons were derived from "pins-by-doofi" image downloaded from OpenClipart.org. It was created by doofi and it is on the public domain:
      http://openclipart.org/detail/129961/pins-by-doofi
 
 ** Zoom in, out and pan icons were derived from MapFish toolbar icons.
+
+** bluebird.png was created by jaschon and it is on the public domain. It was downloaded from
+     http://openclipart.org/detail/69181/bluebird-by-jaschon 
