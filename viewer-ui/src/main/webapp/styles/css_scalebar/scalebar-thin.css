@@ -1,8 +1,9 @@
 .olControlScaleBar {
-    bottom: 10px;
-    left: 10px;
+    bottom: 0px;
+    left: 250px;
     font-family: sans-serif;
     color: #000;
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 .olControlScaleBarBar {
@@ -19,14 +20,14 @@
 
 .olControlScaleBarMarkerMajor {
     height: 7px;
-    width: 1px;
+    width: 2px;
     top: 11px;
     background: #333;
 }
 
 .olControlScaleBarMarkerMinor {
     height: 5px;
-    width: 1px;
+    width: 2px;
     top: 12px;
     background: #333;
 }
