@@ -86,7 +86,8 @@ function copyLayers(fromMap, toMap) {
 	var layers = [];
 	numLayers = fromMap.getNumLayers();
 	for (var i=numLayers-1; i>=0; i--) {
-		if (fromMap.layers[i].name!= "OpenLayers.Handler.Path") { // don't copy tmp layers for measure control, etc.
+		if (fromMap.layers[i].name!= "OpenLayers.Handler.Path" &&
+				fromMap.layers[i].name!= "OpenLayers.Handler.Polygon") { // don't copy tmp layers for measure control, etc.
 			var clonedLayer = fromMap.layers[i].clone();
 			layers[i] = clonedLayer;
 		}
@@ -112,13 +113,12 @@ function unsetColorInPanel(panel) {
 
 function zoomToFullExtent(theMap) {
 	var lonlat = new OpenLayers.LonLat(2102825.1807922, 4661687.4971957);
-	map1.setCenter(lonlat, 4);
+	activePanel.map.setCenter(lonlat, 4);
 }
 
 // this function is called when map extent inside mapPanel is clicked
 // and listen to active map
 function settingHandlerToAction() {
-	Ext.getCmp('btnZoomFullExtent').setHandler(zoomToFullExtent);
 	if(activePanel == mapPanel1) {
 		ctrlHist.activate();
 		ctrlHist2.deactivate();
@@ -295,7 +295,8 @@ function initMapPanel() {
 		enableToggle : false,
 		layout : 'form',
 		tooltip : "Full Extent",
-		iconCls : "botonFullExtent"
+		iconCls : "botonFullExtent",
+		handler: zoomToFullExtent
 	});
 	
 	infoWin1 = new UAB.infotool.InfoWindow({
