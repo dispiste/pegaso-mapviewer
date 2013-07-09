@@ -33,6 +33,16 @@ div.mainPegasoLogo {
     padding-left: 35px;
 }
 
+.winFeatInfoBody {
+	background-color: #FFFFFF;
+}
+.panelFeatInfoBody {
+	border-left-color: #FFFFFF;
+	border-bottom-color: #FFFFFF;
+	border-right-color: #FFFFFF;
+}
+
+
 /**
  *     Layer tree styles
  */
@@ -130,6 +140,16 @@ background-image:url(../img/plus.png) !important;
 }
 .btnAreaMeasure{
   background-image:url(../img/area_measure.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
+.btnSplitViewMap{
+  background-image:url(../img/application_cascade.png) !important; 
+  height:16 px !important;
+  width: 16 px !important;
+}
+.btnSincronizarMap{
+  background-image:url(../img/connect.png) !important; 
   height:16 px !important;
   width: 16 px !important;
 }
