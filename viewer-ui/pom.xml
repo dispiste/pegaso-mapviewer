@@ -58,14 +58,16 @@
 								<param>main.js</param>
 								<param>leftTabs.js</param>
 								<param>map.js</param>
+								<param>measureTools.js</param>
 								<param>scaleBar.js</param>
 								<param>searchTools.js</param>
 								<param>CSW/CSWSearchField.js</param>
 								<param>CSW/CustomCSWRecordsReader.js</param>
 								<param>feat/FeaturedLayers.js</param>
 								<param>CSW/CustomCSWRecordsReader.js</param>
-								<param>infotool/InfoAction.js</param>
+								<param>infotool/InfoWindow.js</param>
 								<param>tree/CustomTreePanel.js</param>
+								<param>LoadingPanel.js</param>
 							</jsSourceFiles>
 							<!-- 
 							<jsSourceIncludes>
