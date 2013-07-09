@@ -22,11 +22,11 @@ Ext.onReady(function() {
 	initMeasureTools();
 	initMapPanel();
 	initLeftTabs();
-	returnActiveLayersII(); // function to return active layers according to visible layers in treePanel
 	initSearchTools();
 
 
 	new Ext.Viewport({
+		id: 'viewp',
 		layout: "border",
 		defaults: {border: false},
 		items: [{
@@ -34,10 +34,8 @@ Ext.onReady(function() {
 				contentEl: "northDiv",
 				height: 80
 			},
-			mapPanel,
+			contMapPanel,
 			tabPanel
 		]
 	});
-	
-	selectTopLayer();
 });

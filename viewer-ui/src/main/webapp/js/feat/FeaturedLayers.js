@@ -71,7 +71,7 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 		config.height = config.height || this.fixedHeight;
 		config.bodyStyle = 'background:transparent;';
 		UAB.feat.FeaturedLayers.superclass.constructor.call(this, config);
-		map.events.register('removelayer', this, this.onLayerRemove);
+		map1.events.register('removelayer', this, this.onLayerRemove);
 		this.buildUI();
 	},
 	buildUI: function() {
@@ -240,7 +240,7 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 										} else {
 											elInfo.active = false;
 											Ext.get(target.id).setOpacity(1.); 
-											var layerObject = map.getLayer(elInfo.id);
+											var layerObject = map1.getLayer(elInfo.id);
 											this.removeLayerFromFLPanel(layerObject);
 											delete this.activeLayers[elInfo.id];
 										}
@@ -323,11 +323,11 @@ UAB.feat.FeaturedLayers  = Ext.extend(Ext.Panel, {
 											  }
 											);
 		elInfo.id = addedLayer.id;
-		mapPanel.map.addLayer(addedLayer);
+		mapPanel1.map.addLayer(addedLayer);
 	}, 
 	// private: remove a layer to the map by clicking on the corresponding image (items) accordingly to server URL and layer name
 	removeLayerFromFLPanel : function(layerObj){
-		map.removeLayer(layerObj);
+		map1.removeLayer(layerObj);
 	},	
 	onLayerRemove: function(evt){
 		var layerId = evt.layer.id;

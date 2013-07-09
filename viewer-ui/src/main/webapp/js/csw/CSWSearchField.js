@@ -141,6 +141,17 @@ UAB.csw.CSWSearchField  = Ext.extend(Ext.form.TriggerField, {
 			myMask.show();
 		}
 	},
+	/** private: method[setMap]
+     *  :param map: ``GeoExt.MapPanel||OpenLayers.Map``
+     *
+     *  Set the :obj:`map` for this instance.
+     */
+    setMap: function(map) {
+        if (map instanceof GeoExt.MapPanel) {
+            map = map.map;
+        }
+        this.map = map;
+    },
     /**
      * Loads a WMS layer in the configured map.
      *

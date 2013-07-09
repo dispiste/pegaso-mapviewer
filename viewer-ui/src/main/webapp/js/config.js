@@ -78,6 +78,27 @@ App.config.featureInfo.templates = {
 		'</tpl>',
 		{compiled: true}
 	),
+	cases: new Ext.XTemplate(
+		'<tpl>',
+			'<div class="infoByPointResultFrame">',
+				'<tpl for=".">',
+					'<div class="infoByPointBody">',
+						'<tpl for="attributes">',
+							'<div class="infoByPointRegister">',
+								'<p class="infoByPointResultTitle">{NAME_ENGL} </p>',
+								'<p>Name: {NAMECASE} </p>', 
+								'<p>Country: {COUNTRY} </p>',
+							'</div>',
+							'<div>',
+								'<p>You can find more info about <a href={WEB} target="_blank">{NAMECASE} case</a> on Pegaso Wiki.</p>',
+							'</div>',
+						'</tpl>',
+					'</div>',
+				'</tpl>',
+			'</div>',
+		'</tpl>',
+		{compiled: true}
+	),
 	nuts: new Ext.XTemplate(
 		'<tpl>',
 			'<div class="infoByPointResultFrame">',
@@ -183,23 +204,24 @@ App.config.featureInfo.servers = {
 		"NUTS_RG_03M_2010_L0": App.config.featureInfo.templates.nuts,
 		"NUTS_RG_03M_2010_L1": App.config.featureInfo.templates.nuts,
 		"NUTS_RG_03M_2010_L2": App.config.featureInfo.templates.nuts,
-		"NUTS_RG_03M_2010_L3": App.config.featureInfo.templates.nuts
+		"NUTS_RG_03M_2010_L3": App.config.featureInfo.templates.nuts,
+		"PEGASO_CASES": App.config.featureInfo.templates.cases
 	},
 	"http://geo.vliz.be:80/geoserver/wms?SERVICE=WMS&": {
 		"Ecoregions:ecoregions": App.config.featureInfo.templates.ecoregions,
 	}
 };
 
-App.config.layers2 = [
-	new OpenLayers.Layer.Google(
-		"Google Satellite",
-		{
-			type : google.maps.MapTypeId.SATELLITE,
-			numZoomLevels : 22
-			//, maxExtent: new OpenLayers.Bounds(-19567879.238281,-19567879.068281,19567879.238281,19567879.408281)
-		}
-	)
-	];
+App.config.featureInfo.defautLayers = {
+	"http://pegasosdi.uab.es/ogc/wms?": [
+		"CNTR_RG_03M_2010",
+		"PEGASO_CASES"
+	],
+	"http://geo.vliz.be:80/geoserver/wms?SERVICE=WMS&": [
+		"MarineRegions:eez"
+	]
+};
+
 /***********************************************			
 * Layers to be loaded by default
 ************************************************/
@@ -296,54 +318,21 @@ App.config.layers = [
 		}, {
 			isBaseLayer : false,
 			buffer : 0,
-			visibility : false
+			visibility : true
+		}
+	),
+	new OpenLayers.Layer.WMS("Pegaso CASES",
+		"http://pegasosdi.uab.es/ogc/wms?",
+		{
+			layers : "PEGASO_CASES",
+			transparent : true,
+			format : "image/png"
+		}, {
+			isBaseLayer : false,
+			buffer : 0,
+			visibility : true
 		}
 	)
-	/* ,
- 	new OpenLayers.Layer.WMS("Administrative Units 2010 Level 0",
- 		"http://pegasosdi.uab.es/ogc/wms?",
- 		{
- 			layers: "NUTS_RG_03M_2010_L0",
- 			transparent: true,
- 			format: "image/png"
- 		}, {
- 			isBaseLayer: false,
- 			buffer: 0
- 		}
- 	),
- 	new OpenLayers.Layer.WMS("Administrative Units 2010 Level 1",
- 		"http://pegasosdi.uab.es/ogc/wms?",
- 		{
- 			layers: "NUTS_RG_03M_2010_L1",
- 			transparent: true,
- 			format: "image/png"
- 		}, {
- 			isBaseLayer: false,
- 			buffer: 0
- 		}
- 	),
- 	new OpenLayers.Layer.WMS("Administrative Units 2010 Level 2",
- 		"http://pegasosdi.uab.es/ogc/wms?",
- 		{
- 			layers: "NUTS_RG_03M_2010_L2",
- 			transparent: true,
- 			format: "image/png"
- 		}, {
- 			isBaseLayer: false,
- 			buffer: 0
- 		}
- 	),
- 	new OpenLayers.Layer.WMS("Administrative Units 2010 Level3",
- 		"http://pegasosdi.uab.es/ogc/wms?",
- 		{
- 			layers: "NUTS_RG_03M_2010_L3",
- 			transparent: true,
- 			format: "image/png"
- 		}, {
- 			isBaseLayer: false,
- 			buffer: 0
- 		}
- 	)*/
 ];
 
 
